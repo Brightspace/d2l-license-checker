@@ -1,9 +1,8 @@
 language: node_js
-node_js:
-  - "4.3"
+node_js: "4.3"
 deploy:
   provider: script
   script: _travis/deploy.sh
   on:
-    branch: master
+    all_branches: true
     tags: true

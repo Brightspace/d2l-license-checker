@@ -1,6 +1,6 @@
 {
   "name": "license-checker-ci",
-  "version": "0.1.0-snapshot",
+  "version": "0.1.0",
   "description": "Simple tool to continuously check licenses of all npm dependencies in a project",
   "license": "ISC",
   "repository": {
