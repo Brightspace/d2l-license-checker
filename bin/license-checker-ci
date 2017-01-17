@@ -1,0 +1,97 @@
+#!/usr/bin/env node
+'use strict';
+
+const checker = require('license-checker');
+const _ = require('lodash/core');
+const fs = require('fs');
+const path = require('path');
+
+const defaultConfigFilePath = 'license-checker-ci.cfg';
+const argv = require('yargs')
+  .usage('$0 [config-file-path]\n\n' +
+         '  If no argument is given, the file "' + defaultConfigFilePath + '" will be used as default.')
+  .help('h')
+  .alias('h', 'help')
+  .strict()
+  .argv;
+
+var config = undefined;
+
+function handleError(err) {
+  console.error('ERROR: ' + err);
+  process.exit(1);
+}
+
+function readConfig() {
+  const configFilePath = path.resolve(argv._[0] || defaultConfigFilePath);
+  fs.readFile(configFilePath, 'utf8', (err, data) => {
+    if (err) {
+      handleError('Could not read configuration file "' + configFilePath + '"');
+    }
+    try {
+      config = JSON.parse(data);
+    } catch (err) {
+      handleError('Could not parse JSON: ' + err.msg);
+    }
+  });
+}
+
+function checkLicense(licenseString) {
+  if (licenseString.length == 0) {
+    return false;
+  }
+  if (config.acceptGuessed && licenseString[licenseString.length - 1] === '*') {
+    licenseString = licenseString.substring(0, licenseString.length - 1)
+  }
+  if (licenseString[0] === '(' && licenseString[licenseString.length - 1] === ')') {
+    licenseString = licenseString.substring(1, licenseString.length - 1);
+  }
+  var licenses = undefined;
+  var listRegex = /\s+OR\s+|\s+AND\s+/;
+  if (String(licenseString).match(listRegex)) {
+    licenses = licenseString.split(listRegex);
+  } else {
+    licenses = [licenseString];
+  }
+  return _.some(licenses, function(license) {
+    return config.acceptedlicenses.indexOf(license) >= 0;
+  });
+}
+
+function checkPackage(packageString) {
+  var pkg = packageString.substring(0, packageString.lastIndexOf('@'));
+  return config.acceptedPackages.indexOf(pkg) >= 0;
+}
+
+function processLicenseCheckerOutput(json) {
+  var fail = false;
+  for (var key in json) {
+    var license = json[key].licenses;
+    if (!(checkLicense(license) || checkPackage(key))) {
+      fail = true;
+      console.error('ERROR: Package "' + key + '" doesn\'t meet license requirements (' + license + ').\n' +
+                    '       Repository: ' + json[key].repository)
+    }
+  }
+  if (fail) {
+    handleError('Some licenses didn\'t pass the requirements (see above).\n' +
+                '       Please check the offending packages or update the configuration file.');
+  } else {
+    console.log('All licenses seem to be OK.');
+  }
+}
+
+function main() {
+  readConfig();
+  checker.init({
+    start: process.cwd()
+  }, function(err, json) {
+    if (err) {
+      handleError('license-checker did not run successfully. Details:\n       ' + err);
+    } else {
+      processLicenseCheckerOutput(json);
+    }
+  });
+}
+
+main();

@@ -1,0 +1,18 @@
+{
+  "name": "license-checker-ci",
+  "version": "0.1.0-snapshot",
+  "description": "Simple tool to continuously check licenses of all npm dependencies in a project",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Brightspace/license-checker-ci"
+  },
+  "bin": {
+    "license-checker-ci": "./bin/license-checker-ci"
+  },
+  "dependencies": {
+    "license-checker": "^8.0.3",
+    "lodash": "^4.17.4",
+    "yargs": "^6.6.0"
+  }
+}
