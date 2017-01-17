@@ -2,6 +2,7 @@ language: node_js
 node_js: "4.3"
 deploy:
   provider: script
-  script: sh _travis/deploy.sh
+  script: chmod +x _travis/deploy.sh && _travis/deploy.sh
   on:
+    branch: master
     tags: true
