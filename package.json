@@ -7,6 +7,10 @@
     "type": "git",
     "url": "https://github.com/Brightspace/license-checker-ci"
   },
+  "scripts": {
+    "lint": "eslint lib/** bin/**",
+    "test": "mocha"
+  },
   "bin": {
     "license-checker-ci": "./bin/license-checker-ci"
   },
@@ -14,5 +18,9 @@
     "license-checker": "^8.0.3",
     "lodash": "^4.17.4",
     "yargs": "^6.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.13.1",
+    "mocha": "^3.2.0"
   }
 }
