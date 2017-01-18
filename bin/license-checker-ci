@@ -4,9 +4,11 @@
 // SPDX license IDs: https://spdx.org/licenses/
 
 const checker = require('license-checker');
-const _ = require('lodash/core');
+const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const spdx = require('spdx');
+const satisfies = require('spdx-satisfies');
 
 const defaultConfigFilePath = 'license-checker-ci.cfg';
 const argv = require('yargs')
@@ -21,6 +23,9 @@ const argv = require('yargs')
 let config;
 let projectName;
 const projectDir = argv._[0] || process.cwd();
+let acceptedSpdxExpr;
+
+const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides'];
 
 function handleError(err, code) {
 	console.error('ERROR: ' + err);
@@ -31,51 +36,52 @@ function readConfig() {
 	const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
 	let pjson = require(path.resolve(path.join(projectDir, 'package.json')));
 	projectName = pjson.name;
-	fs.readFile(configFilePath, 'utf8', (err, data) => {
-		if (err) {
-			handleError('Could not read configuration file "' + configFilePath + '"');
+	try {
+		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
+		config = JSON.parse(data);
+	} catch (err) {
+		handleError('Could not read config file: ' + err);
+	}
+	for (let key in config) {
+		if (configAcceptedEntries.indexOf(key) < 0) {
+			handleError('"' + key + '" is not a valid entry in the config file.');
 		}
-		try {
-			config = JSON.parse(data);
-		} catch (err2) {
-			handleError('Could not parse JSON: ' + err2.msg);
+		if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
+			handleError('"acceptedLicenses" must be a list (' + config.acceptedLicenses + ').');
 		}
-	});
+		if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
+			handleError('"manualOverrides" must be an object (' + config.manualOverrides + ').');
+		}
+	}
+	config.acceptedLicenses = config.acceptedLicenses || [];
+	config.manualOverrides = config.manualOverrides || {};
+	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(config.acceptedLicenses, ' OR ') + ')' : undefined;
 }
 
-function checkLicense(licenseString) {
+function checkLicense(licenseString, packageString) {
 	if (licenseString.length === 0) {
 		return false;
 	}
-	if (!config.rejectGuessed && licenseString[licenseString.length - 1] === '*') {
+  /*
+  // use this code if you want to acced guessed packages
+	if (licenseString[licenseString.length - 1] === '*') {
 		licenseString = licenseString.substring(0, licenseString.length - 1);
 	}
-	if (licenseString[0] === '(' && licenseString[licenseString.length - 1] === ')') {
-		licenseString = licenseString.substring(1, licenseString.length - 1);
-	}
-	let licenses;
-  // TODO: review this expression logic, maybe use https://www.npmjs.com/package/spdx
-	let listRegex = /\s+OR\s+|\s+AND\s+/;
-	if (String(licenseString).match(listRegex)) {
-		licenses = licenseString.split(listRegex);
-	} else {
-		licenses = [licenseString];
-	}
-	return config.acceptedLicenses && _.some(licenses, function(license) {
-		return config.acceptedLicenses.indexOf(license) >= 0;
-	});
-}
-
-function checkPackage(packageString) {
-	let pkg = packageString.substring(0, packageString.lastIndexOf('@'));
-	return (config.acceptedPackages && config.acceptedPackages.indexOf(pkg) >= 0) || packageString.startsWith(projectName + '@');
+  */
+	return (
+    (acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
+    || packageString.startsWith(projectName + '@')
+	);
 }
 
 function processLicenseCheckerOutput(json) {
 	let fail = false;
 	_.forEach(json, (value, key) => {
 		let license = value.licenses;
-		if (!(checkLicense(license) || checkPackage(key))) {
+		if (config.manualOverrides[key]) {
+			license = config.manualOverrides[key];
+		}
+		if (!checkLicense(license, key)) {
 			fail = true;
 			console.error('ERROR: Package "' + key + '" doesn\'t meet license requirements (' + license + ').\n' +
                     '       Repository: ' + value.repository);

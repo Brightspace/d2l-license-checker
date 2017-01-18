@@ -17,6 +17,8 @@
   "dependencies": {
     "license-checker": "^8.0.3",
     "lodash": "^4.17.4",
+    "spdx": "^0.5.1",
+    "spdx-satisfies": "^0.1.3",
     "yargs": "^6.6.0"
   },
   "devDependencies": {

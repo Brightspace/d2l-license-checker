@@ -19,9 +19,8 @@ Example configuration file:
     "ISC",
     "BSD"
   ],
-  "acceptedPackages": [
-    "json-schema"
-  ],
-  "acceptGuessed": true
+  "manualOverrides": {
+    "some-package@9.9.9": "MIT"
+  }
 }
 ```
