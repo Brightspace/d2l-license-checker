@@ -2,7 +2,6 @@
 
 const assert = require('assert');
 const spawnSync = require('child_process').spawnSync;
-const Promise = require('bluebird');
 const _ = require('lodash');
 
 const dataDir = 'test/data/';
@@ -23,7 +22,7 @@ function checkProject(projectPath, configFile) {
 		console.log('stderr:\n' + npm.stderr);
 	}
 	if (npm.status !== 0) {
-		throw new Error("npm install failed (code: " + npm.status + ')"');
+		throw new Error('npm install failed (code: ' + npm.status + ')"');
 	}
 	let proc = spawnSync('node', args);
 	if (verbose) {

@@ -29,8 +29,8 @@ function handleError(err, code) {
 
 function readConfig() {
 	const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-  let pjson = require(path.resolve(path.join(projectDir, 'package.json')));
-  projectName = pjson.name;
+	let pjson = require(path.resolve(path.join(projectDir, 'package.json')));
+	projectName = pjson.name;
 	fs.readFile(configFilePath, 'utf8', (err, data) => {
 		if (err) {
 			handleError('Could not read configuration file "' + configFilePath + '"');
