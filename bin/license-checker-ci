@@ -55,6 +55,11 @@ function readConfig() {
 	}
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.manualOverrides = config.manualOverrides || {};
+	_.forEach(config.acceptedLicenses, (license) => {
+		if (!spdx.valid(license)) {
+			handleError('"' + license + '" is not a valid SPDX license ID.');
+		}
+	});
 	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(config.acceptedLicenses, ' OR ') + ')' : undefined;
 }
 
@@ -70,6 +75,7 @@ function checkLicense(licenseString, packageString) {
   */
 	return (
     (acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
+    || licenseString === 'ACCEPT'
     || packageString.startsWith(projectName + '@')
 	);
 }
