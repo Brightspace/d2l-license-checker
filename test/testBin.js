@@ -16,7 +16,7 @@ function checkProject(projectPath, configFile) {
 		}
 	}
 	let npm = spawnSync('npm install', {cwd: projectPath, shell: true});
-	if (verbose || (npm.status !== 0) {
+	if (verbose || npm.status !== 0) {
 		console.log('Running npm install');
 		console.log('stdout:\n' + npm.stdout);
 		console.log('stderr:\n' + npm.stderr);
