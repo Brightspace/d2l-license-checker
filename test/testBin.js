@@ -22,6 +22,7 @@ function checkProject(projectPath, configFile) {
 		console.log('stderr:\n' + npm.stderr);
 	}
 	if (npm.status !== 0) {
+		console.log(npm);
 		throw new Error('npm install failed (code: ' + npm.status + ')"');
 	}
 	let proc = spawnSync('node', args);
