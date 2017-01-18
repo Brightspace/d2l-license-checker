@@ -8,8 +8,8 @@
     "url": "https://github.com/Brightspace/license-checker-ci"
   },
   "scripts": {
-    "lint": "eslint lib/** bin/**",
-    "test": "mocha"
+    "lint": "eslint lib/** bin/** test/*",
+    "test": "mocha --timeout 30000"
   },
   "bin": {
     "license-checker-ci": "./bin/license-checker-ci"
@@ -20,7 +20,9 @@
     "yargs": "^6.6.0"
   },
   "devDependencies": {
+    "bluebird": "^3.4.7",
     "eslint": "^3.13.1",
+    "lodash": "^4.17.4",
     "mocha": "^3.2.0"
   }
 }
