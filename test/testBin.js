@@ -18,18 +18,18 @@ function checkProject(projectPath, configFile) {
 	let npm = spawnSync('npm', ['install'], {cwd: projectPath, shell: true});
 	if (verbose || npm.status !== 0) {
 		console.log('Running npm install');
-		console.log('stdout:\n' + npm.stdout);
-		console.log('stderr:\n' + npm.stderr);
+		console.log(`stdout:\n${npm.stdout}`);
+		console.log(`stderr:\n${npm.stderr}`);
 	}
 	if (npm.status !== 0) {
 		console.log(npm);
-		throw new Error('npm install failed (code: ' + npm.status + ')"');
+		throw new Error('npm install failed (code: ${npm.status})"');
 	}
 	let proc = spawnSync('node', args);
 	if (verbose) {
-		console.log('Running command "node ' + _.join(args, ' ') + '"');
-		console.log('stdout:\n' + proc.stdout);
-		console.log('stderr:\n' + proc.stderr);
+		console.log(`Running command "node ${_.join(args, ' ')}"`);
+		console.log(`stdout:\n${proc.stdout}`);
+		console.log(`stderr:\n${proc.stderr}`);
 	}
 	return proc.status;
 }
