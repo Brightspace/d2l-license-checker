@@ -12,7 +12,7 @@ Simply add this node package as a dev-requirement and add the following line to 
 
 See --help for more details.
 
-Example configuration file:
+Example configuration file (`license-checker-ci.cfg`):
 
 ```
 {
@@ -26,3 +26,5 @@ Example configuration file:
   }
 }
 ```
+
+In addition to the SPDX IDs, you can you the strings `Public-Domain` and `Project-Owner`;
