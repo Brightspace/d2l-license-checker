@@ -119,9 +119,8 @@ function main() {
 	licenseChecker({
 		start: projectDir,
 		production: true
-	}).then(
-		(json) => processLicenseCheckerOutput(json),
-		(err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
+	}).catch((err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
+	).then((json) => processLicenseCheckerOutput(json)
 	).catch((err) => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
 }
 
