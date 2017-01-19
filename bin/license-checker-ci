@@ -50,12 +50,12 @@ function readConfig() {
 		if (configAcceptedEntries.indexOf(key) < 0) {
 			handleError(`"${key}" is not a valid entry in the config file.`);
 		}
-		if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
-			handleError(`"acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
-		}
-		if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
-			handleError(`"manualOverrides" must be an object (${config.manualOverrides}).`);
-		}
+	}
+	if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
+		handleError(`"acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
+	}
+	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
+		handleError(`"manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.manualOverrides = config.manualOverrides || {};
@@ -83,7 +83,7 @@ function checkLicense(licenseString, packageString) {
 	return (
 		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
-		|| packageString.startsWith(projectName + '@')
+		|| packageString.startsWith(projectName + '@') // accept your own package
 	);
 }
 
@@ -107,7 +107,7 @@ function processLicenseCheckerOutput(json) {
 			'Some licenses didn\'t pass the requirements (see above).\n' +
 			'Please check the offending packages or update the configuration file.', 2);
 	} else {
-		console.log('All licenses seem to be OK.');
+		console.log('All licenses passed the check.');
 	}
 }
 
