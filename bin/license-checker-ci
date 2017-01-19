@@ -76,12 +76,10 @@ function checkLicense(licenseString, packageString) {
 	if (licenseString.length === 0) {
 		return false;
 	}
-	/*
-	// use this code if you want to acced guessed packages
+	/* use this code if you want to accept guessed packages
 	if (licenseString[licenseString.length - 1] === '*') {
 		licenseString = licenseString.substring(0, licenseString.length - 1);
-	}
-	*/
+	} */
 	return (
 		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
