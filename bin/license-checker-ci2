@@ -1,0 +1,118 @@
+#!/usr/bin/env node
+'use strict';
+
+// SPDX license IDs: https://spdx.org/licenses/
+
+const checker = require('license-checker');
+const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
+const spdx = require('spdx');
+const satisfies = require('spdx-satisfies');
+const Promise = require('bluebird');
+
+const defaultConfigFilePath = 'license-checker-ci.cfg';
+const argv = require('yargs')
+  .usage('$0 [project-path [config-file-path]]\n\n' +
+         '  If no project path is given, the current directory with be used\n' +
+         `  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
+  .help('h')
+  .alias('h', 'help')
+  .strict()
+  .argv;
+
+let config;
+let projectName;
+const projectDir = argv._[0] || process.cwd();
+let acceptedSpdxExpr;
+
+const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides'];
+
+function handleError(err, code) {
+	console.error('ERROR: ' + err);
+	process.exit(code || 1);
+}
+
+function readConfig() {
+	const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
+	let pjson = require(path.resolve(path.join(projectDir, 'package.json')));
+	projectName = pjson.name;
+	try {
+		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
+		config = JSON.parse(data);
+	} catch (err) {
+		handleError(`Could not read config file: ${err}`);
+	}
+	for (let key in config) {
+		if (configAcceptedEntries.indexOf(key) < 0) {
+			handleError(`"${key}" is not a valid entry in the config file.`);
+		}
+		if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
+			handleError(`"acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
+		}
+		if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
+			handleError(`"manualOverrides" must be an object (${config.manualOverrides}).`);
+		}
+	}
+	config.acceptedLicenses = config.acceptedLicenses || [];
+	config.manualOverrides = config.manualOverrides || {};
+	_.forEach(config.acceptedLicenses, (license) => {
+		if (!spdx.valid(license)) {
+			handleError(`"${license}" is not a valid SPDX license ID.`);
+		}
+	});
+	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(config.acceptedLicenses, ' OR ') + ')' : undefined;
+}
+
+function checkLicense(licenseString, packageString) {
+	if (licenseString.length === 0) {
+		return false;
+	}
+  /*
+  // use this code if you want to acced guessed packages
+  if (licenseString[licenseString.length - 1] === '*') {
+    licenseString = licenseString.substring(0, licenseString.length - 1);
+  }
+  */
+	return (
+    (acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
+    || licenseString === 'Public-Domain'
+    || licenseString === 'Project-Owner'
+    || packageString.startsWith(projectName + '@')
+	);
+}
+
+function processLicenseCheckerOutput(json) {
+	let fail = false;
+	_.forEach(json, (value, key) => {
+		let license = value.licenses;
+		if (config.manualOverrides[key]) {
+			license = config.manualOverrides[key];
+		}
+		if (!checkLicense(license, key)) {
+			fail = true;
+			console.error(`ERROR: Package "${key}" doesn\'t meet license requirements (${license}).\n` +
+                    `       Repository: ${value.repository}`);
+		}
+	});
+	if (fail) {
+		handleError('Some licenses didn\'t pass the requirements (see above).\n' +
+                '       Please check the offending packages or update the configuration file.', 2);
+	} else {
+		console.log('All licenses seem to be OK.');
+	}
+}
+
+function main() {
+	readConfig();
+	let licenseChecker = Promise.promisify(checker.init);
+	licenseChecker({
+		start: projectDir,
+		production: true
+	}).then(
+    (json) => processLicenseCheckerOutput(json),
+    (err) => handleError('license-checker did not run successfully. Details:\n       ' + JSON.stringify(err))
+  );
+}
+
+main();
