@@ -10,6 +10,8 @@ Simply add this node package as a dev-requirement and add the following line to 
 
 ```license-checker-ci [config-file-path]```
 
+See --help for more details.
+
 Example configuration file:
 
 ```
