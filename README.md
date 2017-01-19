@@ -27,4 +27,7 @@ Example configuration file (`license-checker-ci.cfg`):
 }
 ```
 
-In addition to the SPDX IDs, you can you the strings `Public-Domain` and `Project-Owner`;
+In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Project-Owner`.
+
+- `Public-Domain`: identifier for public domain code (not supported by SPDX)
+- `Project-Owner`: identifier saying that you own this package and that its license can be ignored (doesn't need to be added to `acceptedlicenses`)
