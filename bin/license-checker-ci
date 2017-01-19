@@ -59,14 +59,13 @@ function readConfig() {
 	}
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.manualOverrides = config.manualOverrides || {};
-	let partitions = _.partition(config.acceptedLicenses, (license) => {
+	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
 		if (spdx.valid(license)) {
 			return true;
 		} else if (spdxExceptions.indexOf(license) >= 0) {
 			return false;
 		}
 		handleError(`"${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
-		throw 'should not get executed';
 	});
 	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(partitions[0], ' OR ') + ')' : undefined;
 	acceptedNonSpdx = partitions[1].concat('Project-Owner');
