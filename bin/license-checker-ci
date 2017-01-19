@@ -13,23 +13,26 @@ const Promise = require('bluebird');
 
 const defaultConfigFilePath = 'license-checker-ci.cfg';
 const argv = require('yargs')
-  .usage('$0 [project-path [config-file-path]]\n\n' +
-         '  If no project path is given, the current directory with be used\n' +
-         `  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
-  .help('h')
-  .alias('h', 'help')
-  .strict()
-  .argv;
+	.usage(
+		'$0 [project-path [config-file-path]]\n\n' +
+		'  If no project path is given, the current directory with be used\n' +
+		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
+	.help('h')
+	.alias('h', 'help')
+	.strict()
+	.argv;
 
 let config;
 let projectName;
 const projectDir = argv._[0] || process.cwd();
 let acceptedSpdxExpr;
+let acceptedNonSpdx;
 
 const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides'];
+const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 
 function handleError(err, code) {
-	console.error('ERROR: ' + err);
+	console.error('ERROR: ' + err.replace('\n', '\n       '));
 	process.exit(code || 1);
 }
 
@@ -47,38 +50,39 @@ function readConfig() {
 		if (configAcceptedEntries.indexOf(key) < 0) {
 			handleError(`"${key}" is not a valid entry in the config file.`);
 		}
-		if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
-			handleError(`"acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
-		}
-		if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
-			handleError(`"manualOverrides" must be an object (${config.manualOverrides}).`);
-		}
+	}
+	if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
+		handleError(`"acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
+	}
+	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
+		handleError(`"manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.manualOverrides = config.manualOverrides || {};
-	_.forEach(config.acceptedLicenses, (license) => {
-		if (!spdx.valid(license)) {
-			handleError(`"${license}" is not a valid SPDX license ID.`);
+	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
+		if (spdx.valid(license)) {
+			return true;
+		} else if (spdxExceptions.indexOf(license) >= 0) {
+			return false;
 		}
+		handleError(`"${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
 	});
-	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(config.acceptedLicenses, ' OR ') + ')' : undefined;
+	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(partitions[0], ' OR ') + ')' : undefined;
+	acceptedNonSpdx = partitions[1].concat('Project-Owner');
 }
 
 function checkLicense(licenseString, packageString) {
 	if (licenseString.length === 0) {
 		return false;
 	}
-  /*
-  // use this code if you want to acced guessed packages
-  if (licenseString[licenseString.length - 1] === '*') {
-    licenseString = licenseString.substring(0, licenseString.length - 1);
-  }
-  */
+	/* use this code if you want to accept guessed packages
+	if (licenseString[licenseString.length - 1] === '*') {
+		licenseString = licenseString.substring(0, licenseString.length - 1);
+	} */
 	return (
-    (acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
-    || licenseString === 'Public-Domain'
-    || licenseString === 'Project-Owner'
-    || packageString.startsWith(projectName + '@')
+		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
+		|| acceptedNonSpdx.indexOf(licenseString) >= 0
+		|| packageString.startsWith(projectName + '@') // accept your own package
 	);
 }
 
@@ -91,15 +95,18 @@ function processLicenseCheckerOutput(json) {
 		}
 		if (!checkLicense(license, key)) {
 			fail = true;
-			console.error(`ERROR: Package "${key}" doesn\'t meet license requirements (${license}).\n` +
-                    `       Repository: ${value.repository}`);
+			console.error(
+				`ERROR: Package "${key}" doesn\'t meet license requirements (${license}).\n` +
+				`       Repository: ${value.repository}`
+			);
 		}
 	});
 	if (fail) {
-		handleError('Some licenses didn\'t pass the requirements (see above).\n' +
-                '       Please check the offending packages or update the configuration file.', 2);
+		handleError(
+			'Some licenses didn\'t pass the requirements (see above).\n' +
+			'Please check the offending packages or update the configuration file.', 2);
 	} else {
-		console.log('All licenses seem to be OK.');
+		console.log('All licenses passed the check.');
 	}
 }
 
@@ -109,10 +116,9 @@ function main() {
 	licenseChecker({
 		start: projectDir,
 		production: true
-	}).then(
-    (json) => processLicenseCheckerOutput(json),
-    (err) => handleError('license-checker did not run successfully. Details:\n       ' + JSON.stringify(err))
-  );
+	}).catch((err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
+	).then((json) => processLicenseCheckerOutput(json)
+	).catch((err) => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
 }
 
 main();

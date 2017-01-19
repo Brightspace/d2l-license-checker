@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "eslint": "^3.13.1",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "pre-commit": "^1.2.2"
   },
   "pre-commit": [
     "lint"
