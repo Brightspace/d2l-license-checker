@@ -28,7 +28,7 @@ const projectDir = argv._[0] || process.cwd();
 let acceptedSpdxExpr;
 let acceptedNonSpdx;
 
-const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides'];
+const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'checkDev', 'checkProd'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 
 function handleError(err, code) {
@@ -44,28 +44,33 @@ function readConfig() {
 		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
 		config = JSON.parse(data);
 	} catch (err) {
-		handleError(`Could not read config file: ${err}`);
+		handleError(`Could not read config file at ${configFilePath}: ${err}`);
 	}
 	for (let key in config) {
 		if (configAcceptedEntries.indexOf(key) < 0) {
-			handleError(`"${key}" is not a valid entry in the config file.`);
+			handleError(`${configFilePath}: "${key}" is not a valid entry (must be one of ${configAcceptedEntries}).`);
 		}
 	}
 	if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
-		handleError(`"acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
+		handleError(`${configFilePath}: "acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
 	}
 	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
-		handleError(`"manualOverrides" must be an object (${config.manualOverrides}).`);
+		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.manualOverrides = config.manualOverrides || {};
+	config.checkDev = Boolean(config.checkDev); // true by default
+	config.checkProd = config.checkProd === undefined ? true : config.checkProd; // false by default
+	if (!config.checkDev && !config.checkProd) {
+		handleError(`${configFilePath}: "checkDev" and "checkProd" can\t both be false`);
+	}
 	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
 		if (spdx.valid(license)) {
 			return true;
 		} else if (spdxExceptions.indexOf(license) >= 0) {
 			return false;
 		}
-		handleError(`"${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
+		handleError(`${configFilePath}: "${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
 	});
 	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(partitions[0], ' OR ') + ')' : undefined;
 	acceptedNonSpdx = partitions[1].concat('Project-Owner');
@@ -113,9 +118,11 @@ function processLicenseCheckerOutput(json) {
 function main() {
 	readConfig();
 	let licenseChecker = Promise.promisify(checker.init);
+	// the semantics of our arguments are different than license-checker (see their --help)
 	licenseChecker({
 		start: projectDir,
-		production: true
+		production: !config.checkDev,
+		development: !config.checkProd
 	}).catch((err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
 	).then((json) => processLicenseCheckerOutput(json)
 	).catch((err) => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
