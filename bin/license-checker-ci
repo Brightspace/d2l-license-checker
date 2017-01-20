@@ -21,25 +21,22 @@ const argv = require('yargs')
 	.alias('h', 'help')
 	.strict()
 	.argv;
-
-let config;
-let projectName;
 const projectDir = argv._[0] || process.cwd();
-let acceptedSpdxExpr;
-let acceptedNonSpdx;
-
+const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
 const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'checkDev', 'checkProd'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
+const projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
+
+let acceptedSpdxExpr;
+let acceptedNonSpdx;
+let config;
 
 function handleError(err, code) {
-	console.error('ERROR: ' + err.replace('\n', '\n       '));
+	console.error('ERROR: ' + err.replace(/\n/g, '\n       '));
 	process.exit(code || 1);
 }
 
 function readConfig() {
-	const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-	let pjson = require(path.resolve(path.join(projectDir, 'package.json')));
-	projectName = pjson.name;
 	try {
 		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
 		config = JSON.parse(data);
@@ -87,7 +84,7 @@ function checkLicense(licenseString, packageString) {
 	return (
 		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
-		|| packageString.startsWith(projectName + '@') // accept your own package
+		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
 	);
 }
 
@@ -101,15 +98,16 @@ function processLicenseCheckerOutput(json) {
 		if (!checkLicense(license, key)) {
 			fail = true;
 			console.error(
-				`ERROR: Package "${key}" doesn\'t meet license requirements (${license}).\n` +
-				`       Repository: ${value.repository}`
+				`>>> Package "${key}" doesn\'t meet license requirements (${license}).\n` +
+				`    Repository: ${value.repository}\n`
 			);
 		}
 	});
 	if (fail) {
 		handleError(
 			'Some licenses didn\'t pass the requirements (see above).\n' +
-			'Please check the offending packages or update the configuration file.', 2);
+			`Please check the offending packages or update the configuration file (${defaultConfigFilePath}).\n` +
+			'You can find more information at https://github.com/Brightspace/license-checker-ci', 2);
 	} else {
 		console.log('All licenses passed the check.');
 	}
