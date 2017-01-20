@@ -15,7 +15,7 @@ Simple tool to continuously check licenses of all npm dependencies in a project.
 		"scripts": {
 			`"license-check": "license-checker-ci"`
 		}
-		
+
 1. Add a file `license-checker-ci.cfg` to your node module.
 
 		{
@@ -26,7 +26,9 @@ Simple tool to continuously check licenses of all npm dependencies in a project.
 		  ],
 		  "manualOverrides": {
 			"some-package@9.9.9": "MIT"
-		  }
+		  },
+		  "checkDev": true,
+		  "checkProd": false
 		}
 
 1. Check that the licenses pass the test by running `npm run license-check`. See `--help` for more options.
@@ -39,7 +41,11 @@ The configuration file is a simple JSON file with the following optional entries
 
 1. `"acceptedLicenses"`: list of valid [SPDX license IDs](https://spdx.org/licenses/) that you want to accept
 
-2. `"manualOverrides"`: object where each key is a package name and version (see above example), and the value is a valid SPDX ID. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
+1. `"manualOverrides"`: object where each key is a package name and version (see above example), and the value is a valid SPDX ID. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
+
+1. `"chechDev"`: set to true if you want dev dependencies to be checked as well (false by default)
+
+2. `"checkProd"`: set to false if you want exclude prod dependencies from being checked (true by default)
 
 In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Project-Owner`:
 
