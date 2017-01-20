@@ -43,9 +43,9 @@ The configuration file is a simple JSON file with the following optional entries
 
 1. `"manualOverrides"`: object where each key is a package name and version (see above example), and the value is a valid SPDX ID. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
 
-1. `"chechDev"`: set to true if you want dev dependencies to be checked as well (false by default)
+1. `"checkDev"`: set to true if you want dev dependencies to be checked as well (false by default)
 
-2. `"checkProd"`: set to false if you want exclude prod dependencies from being checked (true by default)
+2. `"checkProd"`: set to false if you want exclude production dependencies from being checked (true by default)
 
 In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Project-Owner`:
 
