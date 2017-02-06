@@ -23,6 +23,7 @@
     "bluebird": "3.4.7"
   },
   "devDependencies": {
+    "@d2l/eslint-config-aurora": "0.1.1",
     "chai": "3.5.0",
     "eslint": "3.13.1",
     "mocha": "3.2.0",
