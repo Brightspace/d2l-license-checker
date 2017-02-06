@@ -14,7 +14,7 @@ const Promise = require('bluebird');
 const defaultConfigFilePath = 'license-checker-ci.cfg';
 const argv = require('yargs')
 	.usage(
-		'$0 [project-path [config-file-path]]\n\n' +
+	'$0 [project-path [config-file-path]]\n\n' +
 		'  If no project path is given, the current directory with be used\n' +
 		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
 	.help('h')
@@ -33,6 +33,7 @@ let config;
 
 function handleError(err, code) {
 	console.error('ERROR: ' + err.replace(/\n/g, '\n       '));
+	/* eslint no-process-exit:0 */
 	process.exit(code || 1);
 }
 

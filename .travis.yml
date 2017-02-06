@@ -1,8 +1,21 @@
+env:
+  global:
+    - ARTIFACTORY_REGISTRY=https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local
 language: node_js
-node_js: "4.3"
+node_js:
+  - "4.3"
+install:
+  - curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc
+  - npm install
+script:
+  - set -e
+  - npm run lint
+  - npm run test
 deploy:
   provider: script
-  script: chmod +x _travis/deploy.sh && _travis/deploy.sh
+  script:
+    - npm config set @d2l:registry $ARTIFACTORY_REGISTRY
+    - npm publish --registry $ARTIFACTORY_REGISTRY
   on:
-    brach: master
+    branch: master
     tags: true
