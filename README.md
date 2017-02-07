@@ -51,3 +51,12 @@ In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Projec
 
 - `Public-Domain`: identifier for public domain code (not supported by SPDX)
 - `Project-Owner`: identifier saying that you own this package and that its license can be ignored (doesn't need to be added to `acceptedlicenses`)
+
+## Contributing
+
+1. Update code.
+1. Update version in `package.json`.
+1. Commit/merge changes via pull request.
+1. Tag merge commit: `git tag -a <tag_name> -m "<comment>"`
+1. Push tag: `git push origin <tag_name>`
+1. Travis will automatically publish tagged commits to Artifactory.
