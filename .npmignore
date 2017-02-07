@@ -1,0 +1,6 @@
+test/
+.editorconfig
+.eslintrc
+.npmignore
+.travis.yml
+license-checker-ci.cfg
