@@ -23,7 +23,7 @@ const argv = require('yargs')
 	.argv;
 const projectDir = argv._[0] || process.cwd();
 const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'checkDev', 'checkProd'];
+const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'checkDev', 'checkProd'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 const projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
 
@@ -56,6 +56,7 @@ function readConfig() {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	config.acceptedLicenses = config.acceptedLicenses || [];
+	config.acceptedScopes = config.acceptedScopes || [];
 	config.manualOverrides = config.manualOverrides || {};
 	config.checkDev = Boolean(config.checkDev); // true by default
 	config.checkProd = config.checkProd === undefined ? true : config.checkProd; // false by default
@@ -86,6 +87,7 @@ function checkLicense(licenseString, packageString) {
 		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
 		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
+		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
 	);
 }
 

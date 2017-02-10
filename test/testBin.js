@@ -78,6 +78,14 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-license-issue')), 2);
 	});
 
+	it('should accept a whitelisted scope', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-scope')), 0);
+	});
+
+	it('should reject a non-whitelisted scope', () => {
+		assert.equal(checkProject(makeTestPath('proj-license-issue-scope')), 2);
+	});
+
 	it('self test', () => {
 		assert.equal(checkProject('.'), 0);
 	});
