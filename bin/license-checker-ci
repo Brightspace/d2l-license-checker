@@ -91,10 +91,12 @@ function checkLicense(licenseString, packageString) {
 
 function processLicenseCheckerOutput(json) {
 	let fail = false;
+	let uncheckedManualOverrides = new Set(Object.keys(config.manualOverrides));
 	_.forEach(json, (value, key) => {
 		let license = value.licenses;
 		if (config.manualOverrides[key]) {
 			license = config.manualOverrides[key];
+			uncheckedManualOverrides.delete(key);
 		}
 		if (!checkLicense(license, key)) {
 			fail = true;
@@ -103,6 +105,9 @@ function processLicenseCheckerOutput(json) {
 				`    Repository: ${value.repository}\n`
 			);
 		}
+	});
+	uncheckedManualOverrides.forEach((override) => {
+		console.error(`WARNING: Manual override "${override}" is never used, consider removing it.\n`);
 	});
 	if (fail) {
 		handleError(
