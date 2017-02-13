@@ -47,40 +47,43 @@ function checkProject(projectPath, configFile) {
 	return node.status;
 }
 
+const makeTestPath = (proj) => path.join(dataDir, proj);
+
 describe('Command invocation', () => {
 	it('should accept a project with no dependencies', () => {
-		const projectPath = path.join(dataDir, 'proj-no-deps');
-		assert.equal(checkProject(projectPath), 0);
+		assert.equal(checkProject(makeTestPath('proj-no-deps')), 0);
 	});
 
 	it('should fail a project with no configuration file', () => {
-		const projectPath = path.join(dataDir, 'proj-no-cfg');
-		assert.equal(checkProject(projectPath), 1);
+		assert.equal(checkProject(makeTestPath('proj-no-cfg')), 1);
 	});
 
 	it('should ignore dev dependencies', () => {
-		const projectPath = path.join(dataDir, 'proj-ok-dev');
-		assert.equal(checkProject(projectPath), 0);
+		assert.equal(checkProject(makeTestPath('proj-ok-dev')), 0);
 	});
 
 	it('should ignore prod dependencies', () => {
-		const projectPath = path.join(dataDir, 'proj-ok-prod');
-		assert.equal(checkProject(projectPath), 0);
+		assert.equal(checkProject(makeTestPath('proj-ok-prod')), 0);
 	});
 
 	it('should reject bad config', () => {
-		const projectPath = path.join(dataDir, 'proj-bad-cfg');
-		assert.equal(checkProject(projectPath), 1);
+		assert.equal(checkProject(makeTestPath('proj-bad-cfg')), 1);
 	});
 
 	it('should reject license (dev)', () => {
-		const projectPath = path.join(dataDir, 'proj-license-issue-dev');
-		assert.equal(checkProject(projectPath), 2);
+		assert.equal(checkProject(makeTestPath('proj-license-issue-dev')), 2);
 	});
 
 	it('should reject license (prod)', () => {
-		const projectPath = path.join(dataDir, 'proj-license-issue');
-		assert.equal(checkProject(projectPath), 2);
+		assert.equal(checkProject(makeTestPath('proj-license-issue')), 2);
+	});
+
+	it('should accept a whitelisted scope', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-scope')), 0);
+	});
+
+	it('should reject a non-whitelisted scope', () => {
+		assert.equal(checkProject(makeTestPath('proj-license-issue-scope')), 2);
 	});
 
 	it('self test', () => {
