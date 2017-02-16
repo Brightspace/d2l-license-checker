@@ -1,0 +1,7 @@
+# Autodetect text files and use LF line ending
+* text=auto
+
+*.js text
+*.json text
+*.yml text
+README.md text
