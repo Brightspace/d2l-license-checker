@@ -2,6 +2,8 @@
 
 # license-checker-ci
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Brightspace/license-checker-ci.svg?token=35c8aaa2a23218042f46e29b59702f97633d82b3ef2fecefaa9b760fb0d3a305)](https://greenkeeper.io/)
+
 Simple tool to continuously check licenses of all npm dependencies in a project. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`]([https://github.com/davglass/license-checker)
 
 ## How to use
