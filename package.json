@@ -15,7 +15,7 @@
     "license-checker-ci": "./bin/license-checker-ci"
   },
   "dependencies": {
-    "license-checker": "8.0.4",
+    "license-checker": "9.0.0",
     "lodash": "4.17.4",
     "spdx": "0.5.1",
     "spdx-satisfies": "0.1.3",
