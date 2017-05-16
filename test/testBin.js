@@ -86,6 +86,10 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-license-issue-scope')), 2);
 	});
 
+	it('should accept a project that uses a legacy license format (array)', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-legacy-license')), 0);
+	});
+
 	it('self test', () => {
 		assert.equal(checkProject('.'), 0);
 	});

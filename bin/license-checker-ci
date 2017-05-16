@@ -95,7 +95,9 @@ function processLicenseCheckerOutput(json) {
 	let fail = false;
 	let uncheckedManualOverrides = new Set(Object.keys(config.manualOverrides));
 	_.forEach(json, (value, key) => {
-		let license = value.licenses;
+		let license = Array.isArray(value.licenses)
+			? `(${value.licenses.join(" OR ")})`
+			: value.licenses;
 		if (config.manualOverrides[key]) {
 			license = config.manualOverrides[key];
 			uncheckedManualOverrides.delete(key);
