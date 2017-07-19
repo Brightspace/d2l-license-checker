@@ -135,37 +135,31 @@ function processLicenseCheckerOutput(json) {
 
 function main() {
 	readConfig();
-	switch (config.packageManager) {
-	case 'npm': {
-		let licenseChecker = Promise.promisify(checker.init);
-		// the semantics of our arguments are different than license-checker (see their --help)
-		licenseChecker({
-			start: projectDir,
-			production: !config.checkDev,
-			development: !config.checkProd
-		}).catch((err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
-		).then((json) => processLicenseCheckerOutput(json)
-		).catch((err) => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
-		break;
-	}
-	case 'bower': {
-		bowerChecker.init(projectPackage, (licesnseMap, err) => {
-			try {
+	const licenseChecker = {
+		'npm': () => {
+			const npmChecker = Promise.promisify(checker.init);
+			// the semantics of our arguments are different than license-checker (see their --help)
+			return npmChecker({
+				start: projectDir,
+				production: !config.checkDev,
+				development: !config.checkProd
+			});
+		},
+		'bower': () => new Promise((resolve, reject) => {
+			bowerChecker.init(projectPackage, (licenseMap, err) => {
 				if (err) {
-					handleError('license-checker (bower) did not run successfully. Details:\n' + JSON.stringify(err));
+					return reject(err);
 				} else {
-					processLicenseCheckerOutput(licesnseMap);
+					return resolve(licenseMap);
 				}
-			} catch (e) {
-				handleError('Uncaught exception. Details:\n' + JSON.stringify(e));
-			}
-		});
-		break;
-	}
-	default: {
-		handleError('Unknown internal error.');
-	}
-	}
+			});
+		})
+	};
+
+	return licenseChecker[config.packageManager]()
+		.catch(err => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err)))
+		.then(json => processLicenseCheckerOutput(json))
+		.catch(err => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
 }
 
 main();
