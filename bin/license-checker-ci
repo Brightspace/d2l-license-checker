@@ -102,6 +102,7 @@ function processLicenseCheckerOutput(json) {
 	let fail = false;
 	let uncheckedManualOverrides = new Set(Object.keys(config.manualOverrides));
 	_.forEach(json, (value, key) => {
+		// When the licenses are provided as an array by bower-license, always use the first string
 		let license = Array.isArray(value.licenses) ? value.licenses[0] : value.licenses;
 		if (config.manualOverrides[key]) {
 			license = config.manualOverrides[key];
