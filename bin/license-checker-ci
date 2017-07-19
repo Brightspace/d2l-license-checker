@@ -23,7 +23,7 @@ const argv = require('yargs')
 	.argv;
 const projectDir = argv._[0] || process.cwd();
 const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'checkDev', 'checkProd'];
+const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'checkDev', 'checkProd', 'ignoreUnusedManualOverrides'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 const projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
 
@@ -58,6 +58,7 @@ function readConfig() {
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.acceptedScopes = config.acceptedScopes || [];
 	config.manualOverrides = config.manualOverrides || {};
+	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides || false;
 	config.checkDev = Boolean(config.checkDev); // true by default
 	config.checkProd = config.checkProd === undefined ? true : config.checkProd; // false by default
 	if (!config.checkDev && !config.checkProd) {
@@ -108,9 +109,12 @@ function processLicenseCheckerOutput(json) {
 			);
 		}
 	});
-	uncheckedManualOverrides.forEach((override) => {
-		console.error(`WARNING: Manual override "${override}" is never used, consider removing it.\n`);
-	});
+	if (!config.ignoreUnusedManualOverrides) {
+		uncheckedManualOverrides.forEach((override) => {
+			console.error(`WARNING: Manual override "${override}" is never used, consider removing it.\n`);
+		});
+	}
+
 	if (fail) {
 		handleError(
 			'Some licenses didn\'t pass the requirements (see above).\n' +
