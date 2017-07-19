@@ -25,7 +25,7 @@ const argv = require('yargs')
 const projectDir = argv._[0] || process.cwd();
 const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
 const configAcceptedPackageManagers = ['npm', 'bower'];
-const configAcceptedEntries = ['packageManager', 'acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'checkDev', 'checkProd', 'ignoreUnusedManualOverrides'];
+const configAcceptedEntries = ['packageManager', 'acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 
 let acceptedSpdxExpr;
@@ -66,11 +66,6 @@ function readConfig() {
 	config.acceptedScopes = config.acceptedScopes || [];
 	config.manualOverrides = config.manualOverrides || {};
 	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides || false;
-	config.checkDev = Boolean(config.checkDev); // true by default
-	config.checkProd = config.checkProd === undefined ? true : config.checkProd; // false by default
-	if (!config.checkDev && !config.checkProd) {
-		handleError(`${configFilePath}: "checkDev" and "checkProd" can\t both be false`);
-	}
 	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
 		if (spdx.valid(license)) {
 			return true;
@@ -140,9 +135,7 @@ function main() {
 			const npmChecker = Promise.promisify(checker.init);
 			// the semantics of our arguments are different than license-checker (see their --help)
 			return npmChecker({
-				start: projectDir,
-				production: !config.checkDev,
-				development: !config.checkProd
+				start: projectDir
 			});
 		},
 		'bower': () => new Promise((resolve, reject) => {
