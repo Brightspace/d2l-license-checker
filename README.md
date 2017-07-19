@@ -52,6 +52,8 @@ The configuration file is a simple JSON file with the following optional entries
 
 2. `"checkProd"`: Set it to false if you want exclude production dependencies from being checked (true by default)
 
+1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (false by default)
+
 In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Project-Owner`:
 
 - `Public-Domain`: identifier for public domain code (not supported by SPDX)
