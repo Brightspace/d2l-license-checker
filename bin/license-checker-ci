@@ -4,6 +4,7 @@
 // SPDX license IDs: https://spdx.org/licenses/
 
 const checker = require('license-checker');
+const bowerChecker = require('bower-license');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
@@ -23,13 +24,14 @@ const argv = require('yargs')
 	.argv;
 const projectDir = argv._[0] || process.cwd();
 const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-const configAcceptedEntries = ['acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'checkDev', 'checkProd'];
+const configAcceptedPackageManagers = ['npm', 'bower'];
+const configAcceptedEntries = ['packageManager', 'acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'checkDev', 'checkProd'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
-const projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
 
 let acceptedSpdxExpr;
 let acceptedNonSpdx;
 let config;
+let projectPackage;
 
 function handleError(err, code) {
 	console.error('ERROR: ' + err.replace(/\n/g, '\n       '));
@@ -49,12 +51,17 @@ function readConfig() {
 			handleError(`${configFilePath}: "${key}" is not a valid entry (must be one of ${configAcceptedEntries}).`);
 		}
 	}
+	if (config.packageManager && typeof config.packageManager !== 'string' && configAcceptedPackageManagers.includes(config.packageManager)) {
+		handleError(`${configFilePath}: "packageManager" must be one of ${configAcceptedPackageManagers}`);
+	}
 	if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
 		handleError(`${configFilePath}: "acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
 	}
 	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
+	config.packageManager = config.packageManager || 'npm';
+	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, config.packageManager === 'bower' ? 'bower.json' : 'package.json')));
 	config.acceptedLicenses = config.acceptedLicenses || [];
 	config.acceptedScopes = config.acceptedScopes || [];
 	config.manualOverrides = config.manualOverrides || {};
@@ -95,7 +102,7 @@ function processLicenseCheckerOutput(json) {
 	let fail = false;
 	let uncheckedManualOverrides = new Set(Object.keys(config.manualOverrides));
 	_.forEach(json, (value, key) => {
-		let license = value.licenses;
+		let license = Array.isArray(value.licenses) ? value.licenses[0] : value.licenses;
 		if (config.manualOverrides[key]) {
 			license = config.manualOverrides[key];
 			uncheckedManualOverrides.delete(key);
@@ -123,15 +130,37 @@ function processLicenseCheckerOutput(json) {
 
 function main() {
 	readConfig();
-	let licenseChecker = Promise.promisify(checker.init);
-	// the semantics of our arguments are different than license-checker (see their --help)
-	licenseChecker({
-		start: projectDir,
-		production: !config.checkDev,
-		development: !config.checkProd
-	}).catch((err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
-	).then((json) => processLicenseCheckerOutput(json)
-	).catch((err) => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
+	switch (config.packageManager) {
+		case 'npm': {
+			let licenseChecker = Promise.promisify(checker.init);
+			// the semantics of our arguments are different than license-checker (see their --help)
+			licenseChecker({
+				start: projectDir,
+				production: !config.checkDev,
+				development: !config.checkProd
+			}).catch((err) => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err))
+			).then((json) => processLicenseCheckerOutput(json)
+			).catch((err) => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
+			break;
+		}
+		case 'bower': {
+			bowerChecker.init(projectPackage, (licesnseMap, err) => {
+				try {
+					if (err) {
+						handleError('license-checker (bower) did not run successfully. Details:\n' + JSON.stringify(err));
+					} else {
+						processLicenseCheckerOutput(licesnseMap);
+					}
+				} catch (e) {
+					handleError('Uncaught exception. Details:\n' + JSON.stringify(e));
+				}
+			});
+			break;
+		}
+		default: {
+			handleError('Unknown internal error.');
+		}
+	}
 }
 
 main();

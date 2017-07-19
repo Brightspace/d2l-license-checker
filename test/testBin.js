@@ -86,6 +86,14 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-license-issue-scope')), 2);
 	});
 
+	it('should accept a bower config', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-bower')), 0);
+	});
+
+	it('should reject a bower license', () => {
+		assert.equal(checkProject(makeTestPath('proj-no-bower')), 2);
+	});
+
 	it('self test', () => {
 		assert.equal(checkProject('.'), 0);
 	});
