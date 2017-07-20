@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@d2l/eslint-config-aurora": "0.1.1",
-    "chai": "3.5.0",
+    "chai": "4.0.0",
     "eslint": "3.19.0",
     "mocha": "3.4.2",
     "pre-commit": "1.2.2"
