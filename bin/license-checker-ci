@@ -79,7 +79,7 @@ function readConfig() {
 }
 
 function checkLicense(licenseString, packageString) {
-	if (licenseString.length === 0) {
+	if (typeof licenseString !== 'string' || licenseString.length === 0) {
 		return false;
 	}
 	/* use this code if you want to accept guessed packages
