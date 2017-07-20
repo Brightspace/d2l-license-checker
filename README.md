@@ -4,7 +4,7 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Brightspace/license-checker-ci.svg?token=35c8aaa2a23218042f46e29b59702f97633d82b3ef2fecefaa9b760fb0d3a305)](https://greenkeeper.io/)
 
-Simple tool to continuously check licenses of all npm dependencies in a project. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`]([https://github.com/davglass/license-checker)
+Simple tool to continuously check licenses of all npm or bower dependencies in a project. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`]([https://github.com/davglass/license-checker)
 
 ## How to use
 
@@ -19,20 +19,19 @@ Simple tool to continuously check licenses of all npm dependencies in a project.
 		}
 
 1. Add a file `license-checker-ci.cfg` to your node module.
-
-		{
-		  "acceptedLicenses": [
-			"MIT",
-			"ISC",
-			"BSD"
-		  ],
-		  "acceptedScopes": ["yourCompanyScopeWithoutTheAt"],
-		  "manualOverrides": {
-			"some-package@9.9.9": "MIT"
-		  },
-		  "checkDev": true,
-		  "checkProd": true
-		}
+  ```json
+  {
+    "acceptedLicenses": [
+      "MIT",
+      "ISC",
+      "BSD"
+    ],
+    "acceptedScopes": ["yourCompanyScopeWithoutThe@"],
+    "manualOverrides": {
+      "some-package@9.9.9": "MIT"
+    }
+  }
+  ```
 
 1. Check that the licenses pass the test by running `npm run license-check`. See `--help` for more options.
 
@@ -48,11 +47,9 @@ The configuration file is a simple JSON file with the following optional entries
 
 1. `"acceptedScopes"`: List of (NPM scopes)[https://docs.npmjs.com/misc/scope] that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters.
 
-1. `"checkDev"`: Set it to true if you want dev dependencies to be checked as well (false by default)
-
-2. `"checkProd"`: Set it to false if you want exclude production dependencies from being checked (true by default)
-
 1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (false by default)
+
+1. `"packageManager"`: Set to `"bower"` or `"npm"` to specify the package dependencies to check. (`"npm"` by default)
 
 In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Project-Owner`:
 
