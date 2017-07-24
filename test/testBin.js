@@ -94,6 +94,14 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-no-bower')), 2);
 	});
 
+	it('should accept an in-range override', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-range')), 0);
+	});
+
+	it('should reject an out-of-range override', () => {
+		assert.equal(checkProject(makeTestPath('proj-no-range')), 0);
+	});
+
 	it('self test', () => {
 		assert.equal(checkProject('.'), 0);
 	});
