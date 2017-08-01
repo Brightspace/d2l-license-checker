@@ -7,7 +7,7 @@ const _ = require('lodash');
 
 const npmCmd = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 const dataDir = path.join('test', 'data');
-const verbose = false; // turn this on if you want to see checker command output
+const verbose = true; // turn this on if you want to see checker command output
 
 function checkProject(projectPath, configFile) {
 
@@ -54,8 +54,8 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-no-deps')), 0);
 	});
 
-	it('should fail a project with no configuration file', () => {
-		assert.equal(checkProject(makeTestPath('proj-no-cfg')), 1);
+	it('should allow a project with no configuration file', () => {
+		assert.equal(checkProject(makeTestPath('proj-no-cfg')), 0);
 	});
 
 	it('should ignore dev dependencies', () => {
@@ -78,8 +78,8 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-license-issue')), 2);
 	});
 
-	it('should accept a whitelisted scope', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-scope')), 0);
+	it('should accept the d2l scope', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-scope-d2l')), 0);
 	});
 
 	it('should reject a non-whitelisted scope', () => {
@@ -91,7 +91,7 @@ describe('Command invocation', () => {
 	});
 
 	it('should reject a bower license', () => {
-		assert.equal(checkProject(makeTestPath('proj-no-bower')), 2);
+		assert.equal(checkProject(makeTestPath('proj-bower-license-issue')), 2);
 	});
 
 	it('should accept an in-range override', () => {
@@ -99,7 +99,7 @@ describe('Command invocation', () => {
 	});
 
 	it('should reject an out-of-range override', () => {
-		assert.equal(checkProject(makeTestPath('proj-no-range')), 0);
+		assert.equal(checkProject(makeTestPath('proj-bad-override-range')), 0);
 	});
 
 	it('self test', () => {

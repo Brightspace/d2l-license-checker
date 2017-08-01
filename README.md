@@ -18,14 +18,10 @@ Simple tool to continuously check licenses of all npm or bower dependencies in a
 			`"license-check": "license-checker-ci"`
 		}
 
-1. Add a file `license-checker-ci.cfg` to your node module.
+1. Add an (optional) config file `.licensechecker.json` to your node module.
   ```json
   {
-    "acceptedLicenses": [
-      "MIT",
-      "ISC",
-      "BSD"
-    ],
+    "packageManager": "bower",
     "acceptedScopes": ["yourCompanyScopeWithoutThe@"],
     "manualOverrides": {
       "some-package@9.9.9": "MIT"
@@ -41,13 +37,11 @@ Simple tool to continuously check licenses of all npm or bower dependencies in a
 
 The configuration file is a simple JSON file with the following optional entries:
 
-1. `"acceptedLicenses"`: List of valid [SPDX license IDs](https://spdx.org/licenses/) that you want to accept.
+1. `"manualOverrides"`: Object where each key is a package name and version (see above example), and the value is a valid SPDX ID. The version number can be a semver expression. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
 
-1. `"manualOverrides"`: Object where each key is a package name and version (see above example), and the value is a valid SPDX ID. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
+1. `"acceptedScopes"`: List of (NPM scopes)[https://docs.npmjs.com/misc/scope] that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
 
-1. `"acceptedScopes"`: List of (NPM scopes)[https://docs.npmjs.com/misc/scope] that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters.
-
-1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (false by default)
+1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`true` by default)
 
 1. `"packageManager"`: Set to `"bower"` or `"npm"` to specify the package dependencies to check. (`"npm"` by default)
 

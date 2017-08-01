@@ -1,0 +1,6 @@
+{
+  "packageManager": "bower",
+  "manualOverrides": {
+    "bower-sample-package@3.5.1": "MIT"
+  }
+}
