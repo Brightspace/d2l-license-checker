@@ -99,7 +99,11 @@ describe('Command invocation', () => {
 	});
 
 	it('should reject an out-of-range override', () => {
-		assert.equal(checkProject(makeTestPath('proj-bad-override-range')), 0);
+		assert.equal(checkProject(makeTestPath('proj-bad-override-range')), 2);
+	});
+
+	it('should allow a special exemption override', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-override-special')), 0);
 	});
 
 	it('self test', () => {

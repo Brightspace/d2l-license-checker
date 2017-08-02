@@ -1,6 +1,6 @@
 {
   "manualOverrides": {
-    "modm@0.0.0 - 0.3.0": "MIT",
+    "modm@0.4.1": "D2L-Open-Source-Special-Exemption (THE BEER-WARE LICENSE v42)",
     "bson@0.2.22": "Apache-2.0",
     "kerberos@0.0.4": "Apache-2.0",
     "mongodb@1.4.14": "Apache-2.0"

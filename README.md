@@ -37,18 +37,19 @@ Simple tool to continuously check licenses of all npm or bower dependencies in a
 
 The configuration file is a simple JSON file with the following optional entries:
 
-1. `"manualOverrides"`: Object where each key is a package name and version (see above example), and the value is a valid SPDX ID. The version number can be a semver expression. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
+* `"manualOverrides"`: Object where each key is a package name and version (see above example), and the value is a valid SPDX ID. The version number can be a semver expression. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
 
-1. `"acceptedScopes"`: List of (NPM scopes)[https://docs.npmjs.com/misc/scope] that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
+  In addition to the (SPDX IDs)[https://spdx.org/licenses/], you can use the following strings:
 
-1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`false` by default)
+  - `Public-Domain`: identifier for public domain code (not supported by SPDX)
+  - `Project-Owner`: identifier indicating that you own this package and that its license can be ignored (doesn't need to be added to `acceptedlicenses`)
+  - `D2L-Open-Source-Special-Exemption (license-name)`: identifier indicating that although `license-name` is not a D2L-approved open source license, its use has been granted a special-exemption for this project.
 
-1. `"packageManager"`: Set to `"bower"` or `"npm"` to specify the package dependencies to check. (`"npm"` by default)
+* `"acceptedScopes"`: List of (NPM scopes)[https://docs.npmjs.com/misc/scope] that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
 
-In addition to the SPDX IDs, you can use the strings `Public-Domain` and `Project-Owner`:
+* `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`false` by default)
 
-- `Public-Domain`: identifier for public domain code (not supported by SPDX)
-- `Project-Owner`: identifier saying that you own this package and that its license can be ignored (doesn't need to be added to `acceptedlicenses`)
+* `"packageManager"`: Set to `"bower"` or `"npm"` to specify the package dependencies to check. (`"npm"` by default)
 
 ## Contributing
 
