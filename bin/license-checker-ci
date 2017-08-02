@@ -28,6 +28,7 @@ const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultCo
 const configAcceptedPackageManagers = ['npm', 'bower'];
 const configAcceptedEntries = ['packageManager', 'manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
+const specialExemptionPrefix = 'D2L-Open-Source-Special-Exemption';
 
 let acceptedSpdxExpr;
 let acceptedNonSpdx;
@@ -92,6 +93,7 @@ function checkLicense(licenseString, packageString) {
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
 		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
 		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
+		|| licenseString.startsWith(specialExemptionPrefix)
 	);
 }
 
