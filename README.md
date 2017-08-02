@@ -41,7 +41,7 @@ The configuration file is a simple JSON file with the following optional entries
 
 1. `"acceptedScopes"`: List of (NPM scopes)[https://docs.npmjs.com/misc/scope] that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
 
-1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`true` by default)
+1. `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`false` by default)
 
 1. `"packageManager"`: Set to `"bower"` or `"npm"` to specify the package dependencies to check. (`"npm"` by default)
 

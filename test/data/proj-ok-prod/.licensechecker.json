@@ -1,3 +1,5 @@
 {
-  "manualOverrides": {}
+  "manualOverrides": {
+    "unused-manual-override@0.1.2": "MIT"
+  }
 }

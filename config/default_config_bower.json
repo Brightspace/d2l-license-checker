@@ -20,7 +20,7 @@
     "X11"
   ],
   "acceptedScopes": ["d2l"],
-  "ignoreUnusedManualOverrides": true,
+  "ignoreUnusedManualOverrides": false,
   "manualOverrides": {
     "app-localize-behavior@<2": "BSD-3-Clause",
     "app-route@<1": "BSD-3-Clause",
@@ -39,7 +39,6 @@
     "iron-form-element-behavior@<2": "BSD-3-Clause",
     "iron-icon@<2": "BSD-3-Clause",
     "iron-icons@<2": "BSD-3-Clause",
-    "iron-iconset-svg@<2": "BSD-3-Clause",
     "iron-iconset-svg@<2": "BSD-3-Clause",
     "iron-input@<2": "BSD-3-Clause",
     "iron-list@<2": "BSD-3-Clause",
