@@ -13,7 +13,7 @@ const satisfies = require('spdx-satisfies');
 const Promise = require('bluebird');
 const OverrideHelper = require('../lib/override-helper');
 
-const defaultConfigFilePath = 'license-checker-ci.cfg';
+const defaultConfigFilePath = '.licensechecker.json';
 const argv = require('yargs')
 	.usage(
 	'$0 [project-path [config-file-path]]\n\n' +
@@ -26,7 +26,7 @@ const argv = require('yargs')
 const projectDir = argv._[0] || process.cwd();
 const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
 const configAcceptedPackageManagers = ['npm', 'bower'];
-const configAcceptedEntries = ['packageManager', 'acceptedLicenses', 'manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
+const configAcceptedEntries = ['packageManager', 'manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 
 let acceptedSpdxExpr;
@@ -45,7 +45,8 @@ function readConfig() {
 		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
 		config = JSON.parse(data);
 	} catch (err) {
-		handleError(`Could not read config file at ${configFilePath}: ${err}`);
+		console.log('No config file specified, using unmodified defaults.');
+		config = {};
 	}
 	for (let key in config) {
 		if (configAcceptedEntries.indexOf(key) < 0) {
@@ -55,18 +56,17 @@ function readConfig() {
 	if (config.packageManager && typeof config.packageManager !== 'string' && configAcceptedPackageManagers.includes(config.packageManager)) {
 		handleError(`${configFilePath}: "packageManager" must be one of ${configAcceptedPackageManagers}`);
 	}
-	if (config.acceptedLicenses && !Array.isArray(config.acceptedLicenses)) {
-		handleError(`${configFilePath}: "acceptedLicenses" must be a list (${config.acceptedLicenses}).`);
-	}
 	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	config.packageManager = config.packageManager || 'npm';
 	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, config.packageManager === 'bower' ? 'bower.json' : 'package.json')));
-	config.acceptedLicenses = config.acceptedLicenses || [];
-	config.acceptedScopes = config.acceptedScopes || [];
-	config.manualOverrides = config.manualOverrides || {};
-	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides || false;
+	const defaultConfig = require(`../config/default_config_${config.packageManager}.json`);
+	config.acceptedLicenses = defaultConfig.acceptedLicenses;
+	config.acceptedScopes = _.union(defaultConfig.acceptedScopes, (config.acceptedScopes || []));
+	config.defaultManualOverrides = defaultConfig.manualOverrides;
+	config.manualOverrides = _.assign({}, defaultConfig.manualOverrides, (config.manualOverrides || {}));
+	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides; // eslint-disable-line eqeqeq
 	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
 		if (spdx.valid(license)) {
 			return true;
@@ -97,7 +97,7 @@ function checkLicense(licenseString, packageString) {
 
 function processLicenseCheckerOutput(json) {
 	let fail = false;
-	const overrideHelper = new OverrideHelper(config.manualOverrides);
+	const overrideHelper = new OverrideHelper(config.manualOverrides, config.defaultManualOverrides);
 	_.forEach(json, (value, key) => {
 		// When the licenses are provided as an array by bower-license, always use the first string
 		const license = overrideHelper.find(key) ||

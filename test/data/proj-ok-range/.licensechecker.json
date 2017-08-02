@@ -1,7 +1,4 @@
 {
-  "acceptedLicenses": [
-    "Apache-2.0"
-  ],
   "manualOverrides": {
 	  "weak-map@^1": "Apache-2.0"
   }

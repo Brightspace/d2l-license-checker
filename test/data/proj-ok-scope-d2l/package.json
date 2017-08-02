@@ -1,5 +1,5 @@
 {
-  "name": "proj-ok-range",
+  "name": "proj-ok-scope-d2l",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ms": "0.7.3"
+    "@d2l/eslint-config-aurora": "0.1.1"
   }
 }

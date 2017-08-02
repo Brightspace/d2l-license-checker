@@ -1,7 +1,4 @@
 {
-  "acceptedLicenses": [
-    "MIT"
-  ],
   "manualOverrides": {
 	  "ms@^0.6.1": "MIT"
   }
