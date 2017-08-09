@@ -8,10 +8,10 @@
     "url": "https://github.com/Brightspace/license-checker-ci"
   },
   "scripts": {
-    "license-test": "license-checker-ci",
+    "license-check": "license-checker-ci",
     "lint": "eslint lib/** bin/** test/*",
     "test": "mocha --timeout 30000",
-    "posttest": "npm run license-test"
+    "posttest": "npm run license-check"
   },
   "bin": {
     "license-checker-ci": "./bin/license-checker-ci"
