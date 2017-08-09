@@ -38,7 +38,7 @@
     "cycle@<2": "Public-Domain",
     "dateformat@<2": "MIT",
     "debug@<2": "MIT",
-    "diff@^1.4.0": "BSD-3-Clause",
+    "diff@<2": "BSD-3-Clause",
     "rx-lite-aggregates@^4": "Apache-2.0",
     "rx-lite@^4": "Apache-2.0",
     "doctrine@<2": "Apache-2.0",
