@@ -1,6 +1,6 @@
 {
   "name": "@d2l/license-checker-ci",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Simple tool to continuously check licenses of all npm dependencies in a project",
   "license": "ISC",
   "repository": {
@@ -8,8 +8,10 @@
     "url": "https://github.com/Brightspace/license-checker-ci"
   },
   "scripts": {
+    "license-check": "license-checker-ci",
     "lint": "eslint lib/** bin/** test/*",
-    "test": "mocha --timeout 30000"
+    "test": "mocha --timeout 30000",
+    "posttest": "npm run license-check"
   },
   "bin": {
     "license-checker-ci": "./bin/license-checker-ci"
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@d2l/eslint-config-aurora": "0.1.1",
+    "@d2l/license-checker-ci": "^2.0.0",
     "chai": "4.0.0",
     "eslint": "3.19.0",
     "mocha": "3.4.2",
