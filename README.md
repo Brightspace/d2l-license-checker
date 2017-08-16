@@ -10,25 +10,25 @@ Simple tool to continuously check licenses of all npm or bower dependencies in a
 
 1. Add this package as a dev-requirement:
 
-  `node install --save-dev @d2l/license-checker-ci`
+    `node install --save-dev @d2l/license-checker-ci`
 
 1. Define a new script in your `package.json` by adding the following lines:
-  ```json
-  "scripts": {
-    "license-check": "license-checker-ci"
-  }
-  ```
+    ```json
+    "scripts": {
+      "license-check": "license-checker-ci"
+    }
+    ```
 
 1. Add an (optional) config file `.licensechecker.json` to your node module.
-  ```json
-  {
-    "packageManager": "bower",
-    "acceptedScopes": ["yourCompanyScopeWithoutThe@"],
-    "manualOverrides": {
-      "some-package@9.9.9": "MIT"
+    ```json
+    {
+      "packageManager": "bower",
+      "acceptedScopes": ["yourCompanyScopeWithoutThe@"],
+      "manualOverrides": {
+        "some-package@9.9.9": "MIT"
+      }
     }
-  }
-  ```
+    ```
 
 1. Check that the licenses pass the test by running `npm run license-check`. See `--help` for more options.
 
