@@ -108,7 +108,8 @@ function processLicenseCheckerOutput(json) {
 			fail = true;
 			console.error(
 				`>>> Package "${key}" doesn\'t meet license requirements (${license}).\n` +
-				`    Repository: ${value.repository}\n`
+				`    Repository: ${value.repository}\n` +
+				`    License Location: ${value.licenseFile || 'UNKNOWN'}\n`
 			);
 		}
 	});
