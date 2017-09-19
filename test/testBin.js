@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert;
+const fs = require('fs');
 const path = require('path');
 const spawnSync = require('child_process').spawnSync;
 const _ = require('lodash');
@@ -9,7 +10,7 @@ const npmCmd = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 const dataDir = path.join('test', 'data');
 const verbose = true; // turn this on if you want to see checker command output
 
-function checkProject(projectPath, configFile) {
+function checkProject(projectPath, configFile, templateFile) {
 
 	let args = [path.join('bin', 'license-checker-ci')];
 	if (projectPath) {
@@ -17,6 +18,11 @@ function checkProject(projectPath, configFile) {
 		if (configFile) {
 			args.push(configFile);
 		}
+	}
+
+	if (templateFile) {
+		args.push('-t');
+		args.push(templateFile);
 	}
 
 	let npm = spawnSync(npmCmd, ['install'], {cwd: projectPath, shell: true});
@@ -104,6 +110,16 @@ describe('Command invocation', () => {
 
 	it('should allow a special exemption override', () => {
 		assert.equal(checkProject(makeTestPath('proj-ok-override-special')), 0);
+	});
+
+	it('should create a template file if requested', () => {
+		const testPath = makeTestPath('proj-license-issue-create-template');
+		const templateFile = `${testPath}/template.json`;
+		assert.equal(checkProject(testPath, null, templateFile), 2);
+
+		const template = JSON.parse(fs.readFileSync(templateFile));
+		assert.exists(template.manualOverrides);
+		assert.isAtLeast(Object.keys(template.manualOverrides).length, 1);
 	});
 
 	it('self test', () => {

@@ -34,6 +34,8 @@ Simple tool to continuously check licenses of all npm or bower dependencies in a
 
 1. Make sure `npm run license-check` is called in your CI build script or as part as your tests
 
+If licenses do not pass the test, you can run `npm run license-checker -- --t TEMPLATE-FILE` to generate a template file that can be copied and pasted into the config file for easy overrides.
+
 ## Configuration file
 
 The configuration file is a simple JSON file with the following optional entries:

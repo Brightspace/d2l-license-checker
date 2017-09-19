@@ -1,0 +1,5 @@
+{
+  "manualOverrides": {
+    "yargs-parser@4.2.1": "Public-Domain"
+  }
+}
