@@ -21,8 +21,8 @@ const argv = require('yargs')
 		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
 	.help('h')
 	.alias('h', 'help')
-	.alias('t', 'unknown-template-file')
-	.describe('t', 'If provided, write to FILE licenses that failed the checker. FILE will serve as a copy-paste option for config file additions.')
+	.alias('t', 'generate-template')
+	.describe('t', 'Outputs licenses that failed the checker to standard out.')
 	.strict()
 	.argv;
 const projectDir = argv._[0] || process.cwd();
@@ -49,7 +49,7 @@ function readConfig() {
 		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
 		config = JSON.parse(data);
 	} catch (err) {
-		console.log('No config file specified, using unmodified defaults.');
+		console.error('No config file specified, using unmodified defaults.');
 		config = {};
 	}
 	for (let key in config) {
@@ -124,18 +124,16 @@ function processLicenseCheckerOutput(json) {
 	}
 
 	if (fail) {
-		if (argv.unknownTemplateFile) {
-			fs.writeFileSync(
-				argv.unknownTemplateFile,
-				JSON.stringify({ 'manualOverrides': failedLicenses }, null, 2)
-			);
+		if (argv.generateTemplate) {
+			console.log(JSON.stringify({ 'manualOverrides': failedLicenses }, null, 2));
 		}
 		handleError(
 			'Some licenses didn\'t pass the requirements (see above).\n' +
 			`Please check the offending packages or update the configuration file (${defaultConfigFilePath}).\n` +
+			'You can generate a template by running this tool with --generate-template.\n' +
 			'You can find more information at https://github.com/Brightspace/license-checker-ci', 2);
 	} else {
-		console.log('All licenses passed the check.');
+		console.error('All licenses passed the check.');
 	}
 }
 

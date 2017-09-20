@@ -1,8 +1,0 @@
-{
-  "manualOverrides": {
-    "bson@0.2.22": "Apache License, Version 2.0",
-    "kerberos@0.0.4": "Apache*",
-    "modm@0.4.1": "UNKNOWN",
-    "mongodb@1.4.14": "Apache License, Version 2.0"
-  }
-}
