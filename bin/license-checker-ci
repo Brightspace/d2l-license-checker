@@ -21,6 +21,8 @@ const argv = require('yargs')
 		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
 	.help('h')
 	.alias('h', 'help')
+	.alias('t', 'generate-template')
+	.describe('t', 'Outputs licenses that failed the checker to standard out.')
 	.strict()
 	.argv;
 const projectDir = argv._[0] || process.cwd();
@@ -34,6 +36,7 @@ let acceptedSpdxExpr;
 let acceptedNonSpdx;
 let config;
 let projectPackage;
+const failedLicenses = {};
 
 function handleError(err, code) {
 	console.error('ERROR: ' + err.replace(/\n/g, '\n       '));
@@ -46,7 +49,7 @@ function readConfig() {
 		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
 		config = JSON.parse(data);
 	} catch (err) {
-		console.log('No config file specified, using unmodified defaults.');
+		console.error('No config file specified, using unmodified defaults.');
 		config = {};
 	}
 	for (let key in config) {
@@ -106,6 +109,8 @@ function processLicenseCheckerOutput(json) {
 			(Array.isArray(value.licenses) ? value.licenses[0] : value.licenses);
 		if (!checkLicense(license, key)) {
 			fail = true;
+
+			failedLicenses[key] = license;
 			console.error(
 				`>>> Package "${key}" doesn\'t meet license requirements (${license}).\n` +
 				`    Repository: ${value.repository}\n`
@@ -119,12 +124,16 @@ function processLicenseCheckerOutput(json) {
 	}
 
 	if (fail) {
+		if (argv.generateTemplate) {
+			console.log(JSON.stringify({ 'manualOverrides': failedLicenses }, null, 2));
+		}
 		handleError(
 			'Some licenses didn\'t pass the requirements (see above).\n' +
 			`Please check the offending packages or update the configuration file (${defaultConfigFilePath}).\n` +
+			'You can generate a template by running this tool with --generate-template.\n' +
 			'You can find more information at https://github.com/Brightspace/license-checker-ci', 2);
 	} else {
-		console.log('All licenses passed the check.');
+		console.error('All licenses passed the check.');
 	}
 }
 
