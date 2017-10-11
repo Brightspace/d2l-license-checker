@@ -29,6 +29,7 @@
     "browserstack@<2": "MIT",
     "buffers@<1": "MIT",
     "callsite@<2": "MIT",
+    "chai-http@<4": "MIT",
     "chainsaw@<1": "MIT",
     "colors@<1": "MIT",
     "combined-stream@<1": "MIT",
