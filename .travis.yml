@@ -13,6 +13,7 @@ script:
   - npm run lint
   - npm run test
 deploy:
+  skip_cleanup: true
   provider: script
   script: npm publish --verbose
   on:

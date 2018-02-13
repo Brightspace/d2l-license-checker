@@ -4,3 +4,4 @@ test/
 .npmignore
 .travis.yml
 license-checker-ci.cfg
+.npmrc
