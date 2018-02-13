@@ -5,6 +5,8 @@ language: node_js
 node_js:
   - "6"
 install:
+  - curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc
+  - npm config set @d2l:registry $ARTIFACTORY_REGISTRY
   - npm install
 script:
   - set -e
@@ -12,9 +14,7 @@ script:
   - npm run test
 deploy:
   provider: script
-  script:
-    - curl -ksf -u"$ARTIFACTORY_USER:$ARTIFACTORY_PASS" "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc
-    - npm publish --verbose --registry $ARTIFACTORY_REGISTRY
+  script: npm publish --verbose --registry $ARTIFACTORY_REGISTRY
   on:
     branch: master
     tags: true
