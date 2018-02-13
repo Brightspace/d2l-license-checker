@@ -19,7 +19,7 @@
   "dependencies": {
     "bluebird": "3.5.0",
     "bower-license": "0.4.4",
-    "license-checker": "11.0.0",
+    "license-checker": "15.0.0",
     "lodash": "4.17.4",
     "semver": "5.3.0",
     "spdx": "0.5.1",
