@@ -14,7 +14,7 @@ script:
   - npm run test
 deploy:
   provider: script
-  script: npm publish --verbose --registry $ARTIFACTORY_REGISTRY
+  script: npm publish --verbose
   on:
     branch: master
     tags: true
