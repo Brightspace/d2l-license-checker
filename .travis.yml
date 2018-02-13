@@ -13,8 +13,9 @@ script:
   - npm run lint
   - npm run test
 deploy:
+  skip_cleanup: true
   provider: script
-  script: npm publish --verbose --registry $ARTIFACTORY_REGISTRY
+  script: npm publish --verbose
   on:
     branch: master
     tags: true
