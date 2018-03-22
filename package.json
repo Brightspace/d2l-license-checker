@@ -11,7 +11,7 @@
     "url": "https://github.com/Brightspace/license-checker-ci"
   },
   "scripts": {
-    "license-check": "license-checker-ci",
+    "license-check": "node bin/license-checker-ci",
     "lint": "eslint lib/** bin/** test/*",
     "test": "mocha --timeout 30000",
     "posttest": "npm run license-check"
@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "@d2l/eslint-config-aurora": "0.1.1",
-    "@d2l/license-checker-ci": "^2.0.0",
     "chai": "4.0.0",
     "eslint": "3.19.0",
     "mocha": "3.4.2",
