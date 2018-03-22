@@ -58,7 +58,7 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-no-cfg')), 0);
 	});
 
-	it('should ignore dev dependencies', () => {
+	it.only('should ignore dev dependencies', () => {
 		assert.equal(checkProject(makeTestPath('proj-ok-dev')), 0);
 	});
 
