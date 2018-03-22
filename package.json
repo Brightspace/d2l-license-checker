@@ -20,20 +20,20 @@
     "license-checker-ci": "./bin/license-checker-ci"
   },
   "dependencies": {
-    "bluebird": "3.5.0",
+    "bluebird": "3.5.1",
     "bower-license": "0.4.4",
-    "license-checker": "15.0.0",
-    "lodash": "4.17.4",
-    "semver": "5.3.0",
-    "spdx": "0.5.1",
-    "spdx-satisfies": "0.1.3",
-    "yargs": "7.1.0"
+    "license-checker": "18.0.0",
+    "lodash": "4.17.5",
+    "semver": "5.5.0",
+    "spdx-license-list": "4.0.0",
+    "spdx-satisfies": "4.0.0",
+    "yargs": "11.0.0"
   },
   "devDependencies": {
-    "@d2l/eslint-config-aurora": "0.1.1",
-    "chai": "4.0.0",
-    "eslint": "3.19.0",
-    "mocha": "3.4.2",
+    "@d2l/eslint-config-aurora": "0.1.6",
+    "chai": "4.1.2",
+    "eslint": "4.19.1",
+    "mocha": "5.0.4",
     "pre-commit": "1.2.2"
   },
   "pre-commit": [

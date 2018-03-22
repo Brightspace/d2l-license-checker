@@ -1,3 +1,5 @@
 {
-  "manualOverrides": {}
+  "manualOverrides": {
+    "foo@1.2.3": "AGPL-3.0-or-later"
+  }
 }
