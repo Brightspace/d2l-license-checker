@@ -22,7 +22,7 @@ deploy:
 notifications:
   slack:
     rooms:
-      - d2l:8ahxQtnW0ygxQ8KQUmllSkLF#apollo-build
+      - d2l:z7PkNKfgOmf5zSY1abkcBt8y#apollo-build
     on_pull_requests: false
     on_success: change
     on_failure: always
