@@ -1,1 +1,16 @@
-extends: "@d2l/eslint-config-aurora"
+root: true
+
+env:
+  node: true
+  es6: true
+
+extends:
+  - "eslint:recommended"
+
+parserOptions:
+    sourceType: "scripts"
+    ecmaFeatures:
+      generators: true
+
+rules:
+  no-console: 0
