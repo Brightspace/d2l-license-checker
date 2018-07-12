@@ -9,29 +9,28 @@ const npmCmd = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 const dataDir = path.join('test', 'data');
 const verbose = true; // turn this on if you want to see checker command output
 
-function checkProject(projectPath, configFile) {
+function checkProject(projectPath, install = true) {
 
 	let args = [path.join('bin', 'license-checker-ci')];
 	if (projectPath) {
 		args.push(projectPath);
-		if (configFile) {
-			args.push(configFile);
+	}
+
+	if (install) {
+		let npm = spawnSync(npmCmd, ['install'], {cwd: projectPath, shell: true});
+		if (npm.error !== undefined) {
+			throw npm.error;
 		}
-	}
+		if (verbose || npm.status !== 0) {
+			console.log('Running npm install');
+			console.log(`stdout:\n${npm.stdout}`);
+			console.log(`stderr:\n${npm.stderr}`);
+		}
 
-	let npm = spawnSync(npmCmd, ['install'], {cwd: projectPath, shell: true});
-	if (npm.error !== undefined) {
-		throw npm.error;
-	}
-	if (verbose || npm.status !== 0) {
-		console.log('Running npm install');
-		console.log(`stdout:\n${npm.stdout}`);
-		console.log(`stderr:\n${npm.stderr}`);
-	}
-
-	if (npm.status !== 0) {
-		console.error(npm);
-		throw new Error(`npm install failed (code: ${npm.status})`);
+		if (npm.status !== 0) {
+			console.error(npm);
+			throw new Error(`npm install failed (code: ${npm.status})`);
+		}
 	}
 
 	let node = spawnSync('node', args);
@@ -79,7 +78,7 @@ describe('Command invocation', () => {
 	});
 
 	it('should accept the d2l scope', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-scope-d2l')), 0);
+		assert.equal(checkProject(makeTestPath('proj-ok-scope-d2l'), false), 0);
 	});
 
 	it('should reject a non-whitelisted scope', () => {

@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@d2l/eslint-config-aurora": "0.1.1"
+    "@d2l/private": "0.0.1"
   }
 }
