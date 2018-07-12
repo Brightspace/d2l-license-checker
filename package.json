@@ -1,5 +1,5 @@
 {
-  "name": "@d2l/license-checker-ci",
+  "name": "d2l-license-checker-ci",
   "version": "2.1.0",
   "description": "Simple tool to continuously check licenses of all npm dependencies in a project",
   "license": "UNLICENSED",
@@ -30,7 +30,6 @@
     "yargs": "7.1.0"
   },
   "devDependencies": {
-    "@d2l/eslint-config-aurora": "0.1.1",
     "chai": "4.0.0",
     "eslint": "3.19.0",
     "mocha": "3.4.2",
