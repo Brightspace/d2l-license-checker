@@ -1,7 +1,7 @@
 {
-  "name": "d2l-license-checker-ci",
+  "name": "d2l-license-checker",
   "version": "2.1.0",
-  "description": "Simple tool to continuously check licenses of all npm dependencies in a project",
+  "description": "Simple tool to check licenses of all npm dependencies in a project",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local"
