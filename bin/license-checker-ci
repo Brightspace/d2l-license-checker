@@ -112,7 +112,7 @@ function processLicenseCheckerOutput(json) {
 
 			failedLicenses[key] = license;
 			console.error(
-				`>>> Package "${key}" doesn\'t meet license requirements (${license}).\n` +
+				`>>> Package "${key}" doesn't meet license requirements (${license}).\n` +
 				`    Repository: ${value.repository}\n` +
 				`    Path: ${value.path || 'UNKNOWN'}\n`
 			);
