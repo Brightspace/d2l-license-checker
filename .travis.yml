@@ -10,7 +10,6 @@ script:
   - set -e
   - npm run lint
   - npm run test
-  - npm install -g publish
 env:
   global:
   - ARTIFACTORY_REGISTRY: https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local
@@ -19,7 +18,7 @@ env:
 deploy:
   skip_cleanup: true
   provider: script
-  script: 'TRAVIS="" publish'
+  script: 'curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc && npm install -g publish && TRAVIS="" publish'
   on:
     branch: master
     tags: true
