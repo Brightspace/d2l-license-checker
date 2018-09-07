@@ -4,15 +4,22 @@ node_js:
   - "6"
   - "8"
 install:
+  - curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc
   - npm install
 script:
   - set -e
   - npm run lint
   - npm run test
+  - npm install -g publish
+env:
+  global:
+  - ARTIFACTORY_REGISTRY: https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local
+  - ARTIFACTORY_USER: rw-travisci-license-checker
+  - secure: "YiutzUj0+Bclc2Axi5YIy/P5kZA04QiHckZ+MPuugYReixgBwH1nHNH5/aCzMoliaJ3AOJzxmY/gyZW2VmZK0nGVjqtxEzxkS4d4dBSZ/cGsjeSpTRaVmmK5kIwBLJ12Fu6RtJAF7xn1mYmrzWpMewmk4cy/Z+vIwiz/Bqc5Teu7XC/g/thcAXKJN5fJAPzOr1SfqY6NTLdsPkfEzo8FHVH9pZL9SOLktuqCqNybJ/iVinlZ096S9moKhdDyCdDQQ5yVE3XaGVF4B2o3/5NZKA4/ovi6k2I8ppup9LPJSiabiH+ClsC06/kRwbfUPQ800OEk5pcZoTT20nAKSEHliWyjZqXgcvJKB5IViBLO80Z4+nhVpf0lq9K1NaMgEfqW0kY5FflkTDFDIKfO1TePUguTaQtQhN0GH5rHZaAm1uGT8q9mnqGMlJHQIYUqcgD0qXon5Rn+axQJAtX//9cI8q+yJgYLdcgB2wCeK1ag+W9Ha9NRZsHS9ws5Nt1+so9C/ceq9/UagpWXwDr8wb0b56JMIMJh6lHTAnQKX+YvzBNbO5sZvWFW85YAA0dQCcirt9Bvq1hVqrV/ywJUBUl9JcDEFF2QdSfZjvHJcYUWhH3NGDTn3LIzXJ1aUHlCDxUXGeUgsLpg2YNiw6zAkYLgHcAPI2to5puuruZyPgY9YmQ="
 deploy:
   skip_cleanup: true
   provider: script
-  script: npm publish --verbose
+  script: 'TRAVIS="" publish'
   on:
     branch: master
     tags: true
