@@ -88,6 +88,7 @@
     "optimist@<1": "MIT",
     "options@<1": "MIT",
     "package-license@<1": "Apache-2.0",
+    "pako@<2": "MIT",
     "parse-cache-control@<2": "BSD-3-Clause",
     "progress@<2": "MIT",
     "qs@<3": "BSD-3-Clause",
