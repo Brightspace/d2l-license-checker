@@ -3,14 +3,15 @@
 
 // SPDX license IDs: https://spdx.org/licenses/
 
-const checker = require('license-checker');
-const bowerChecker = require('bower-license');
-const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
+
+const _ = require('lodash');
+const checker = require('license-checker');
 const spdx = require('spdx');
 const satisfies = require('spdx-satisfies');
-const Promise = require('bluebird');
+
 const OverrideHelper = require('../lib/override-helper');
 
 const defaultConfigFilePath = '.licensechecker.json';
@@ -27,8 +28,7 @@ const argv = require('yargs')
 	.argv;
 const projectDir = argv._[0] || process.cwd();
 const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-const configAcceptedPackageManagers = ['npm', 'bower'];
-const configAcceptedEntries = ['packageManager', 'manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
+const configAcceptedEntries = ['manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 const specialExemptionPrefix = 'D2L-Open-Source-Special-Exemption';
 
@@ -57,15 +57,11 @@ function readConfig() {
 			handleError(`${configFilePath}: "${key}" is not a valid entry (must be one of ${configAcceptedEntries}).`);
 		}
 	}
-	if (config.packageManager && typeof config.packageManager !== 'string' && configAcceptedPackageManagers.includes(config.packageManager)) {
-		handleError(`${configFilePath}: "packageManager" must be one of ${configAcceptedPackageManagers}`);
-	}
 	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
-	config.packageManager = config.packageManager || 'npm';
-	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, config.packageManager === 'bower' ? 'bower.json' : 'package.json')));
-	const defaultConfig = require(`../config/default_config_${config.packageManager}.json`);
+	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
+	const defaultConfig = require(`../config/default_config.json`);
 	config.acceptedLicenses = defaultConfig.acceptedLicenses;
 	config.acceptedScopes = _.union(defaultConfig.acceptedScopes, (config.acceptedScopes || []));
 	config.defaultManualOverrides = defaultConfig.manualOverrides;
@@ -104,7 +100,7 @@ function processLicenseCheckerOutput(json) {
 	let fail = false;
 	const overrideHelper = new OverrideHelper(config.manualOverrides, config.defaultManualOverrides);
 	_.forEach(json, (value, key) => {
-		// When the licenses are provided as an array by bower-license, always use the first string
+		// When the licenses are provided as an array, always use the first string
 		const license = overrideHelper.find(key) ||
 			(Array.isArray(value.licenses) ? value.licenses[0] : value.licenses);
 		if (!checkLicense(license, key)) {
@@ -138,31 +134,12 @@ function processLicenseCheckerOutput(json) {
 	}
 }
 
-function main() {
-	readConfig();
-	const licenseChecker = {
-		'npm': () => {
-			const npmChecker = Promise.promisify(checker.init);
-			// the semantics of our arguments are different than license-checker (see their --help)
-			return npmChecker({
-				start: projectDir
-			});
-		},
-		'bower': () => new Promise((resolve, reject) => {
-			bowerChecker.init(projectPackage, (licenseMap, err) => {
-				if (err) {
-					return reject(err);
-				} else {
-					return resolve(licenseMap);
-				}
-			});
-		})
-	};
+const npmChecker = promisify(checker.init);
 
-	return licenseChecker[config.packageManager]()
-		.catch(err => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err)))
-		.then(json => processLicenseCheckerOutput(json))
-		.catch(err => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
-}
+readConfig();
 
-main();
+// the semantics of our arguments are different than license-checker (see their --help)
+npmChecker({ start: projectDir })
+	.catch(err => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err)))
+	.then(json => processLicenseCheckerOutput(json))
+	.catch(err => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));

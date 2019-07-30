@@ -85,14 +85,6 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-license-issue-scope')), 2);
 	});
 
-	it('should accept a bower config', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-bower')), 0);
-	});
-
-	it('should reject a bower license', () => {
-		assert.equal(checkProject(makeTestPath('proj-bower-license-issue')), 2);
-	});
-
 	it('should accept an in-range override', () => {
 		assert.equal(checkProject(makeTestPath('proj-ok-range')), 0);
 	});
