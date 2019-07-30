@@ -10,7 +10,7 @@ Simple tool to continuously check licenses of all npm dependencies in a project.
 
 1. Add this package as a dev-requirement:
 
-    `node install --save-dev @d2l/license-checker-ci`
+    `node install --save-dev @d2l/d2l-license-checker`
 
 1. Define a new script in your `package.json` by adding the following lines:
     ```json
