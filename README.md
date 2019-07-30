@@ -4,7 +4,7 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Brightspace/license-checker-ci.svg?token=35c8aaa2a23218042f46e29b59702f97633d82b3ef2fecefaa9b760fb0d3a305)](https://greenkeeper.io/)
 
-Simple tool to continuously check licenses of all npm or bower dependencies in a project. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
+Simple tool to continuously check licenses of all npm dependencies in a project. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
 
 ## How to use
 
@@ -22,7 +22,6 @@ Simple tool to continuously check licenses of all npm or bower dependencies in a
 1. Add an (optional) config file `.licensechecker.json` to your node module.
     ```json
     {
-      "packageManager": "bower",
       "acceptedScopes": ["yourCompanyScopeWithoutThe@"],
       "manualOverrides": {
         "some-package@9.9.9": "MIT"
@@ -51,8 +50,6 @@ The configuration file is a simple JSON file with the following optional entries
 * `"acceptedScopes"`: List of [NPM scopes](https://docs.npmjs.com/misc/scope) that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
 
 * `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`false` by default)
-
-* `"packageManager"`: Set to `"bower"` or `"npm"` to specify the package dependencies to check. (`"npm"` by default)
 
 ## Contributing
 

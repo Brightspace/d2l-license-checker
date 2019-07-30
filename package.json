@@ -1,6 +1,6 @@
 {
   "name": "d2l-license-checker",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "description": "Simple tool to check licenses of all npm dependencies in a project",
   "license": "MIT",
   "repository": {
@@ -17,8 +17,6 @@
     "license-checker-ci": "./bin/license-checker-ci"
   },
   "dependencies": {
-    "bluebird": "^3.5.1",
-    "bower-license": "^0.4.4",
     "license-checker": "^15.0.0",
     "lodash": "^4.17.10",
     "semver": "^5.5.0",
