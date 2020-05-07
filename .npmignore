@@ -1,7 +1,7 @@
 test/
 .editorconfig
-.eslintrc
+.eslintignore
+.eslintrc.yml
 .npmignore
 .travis.yml
-license-checker-ci.cfg
 .npmrc
