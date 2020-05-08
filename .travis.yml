@@ -1,24 +1,24 @@
 env:
+  global:
+  - ARTIFACTORY_REGISTRY: https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local
+  - ARTIFACTORY_USER: rw-travisci-license-checker
+  - secure: "UsznDI8nfD6F/EYkCo3gNrKe5M0l1vYb4ZCwgJJdWjxzIYnqzGP2TWK4vGiOAQ+NJAn5wEpuWONlmyIumoebXa5ZWyCp7H/keme1uKOn0tEqnVkiJhAiTkWwrzOnZ5E3B+wtvwEUB3lUp5AwVFjdq1pQv6rPcznVSNsNwG63WhrmtRmpjSeZDO/oLF5XbGcwr2c1K5oLI4twjY6+HhJL5/vUoti1u+pqOxFBPL1K8Mk33x3ELBmpW8xTNnLE/2CfzL5b1oJWEmxk0i1i/8xDk1b+Z1+Dt8oguiMHjbGBHShUK2fQFPPMCc8oU1dbF9WyEp6kCyUjSxWxyktxOB/mfVLiiMHLchJYwzimdcXcm5WOhNmbolejiwlOn/4VF57El+GOPY9mXnEHW52VBXp84p/5FKoxrvT6IqyvCTqFdr0A1GYHkOUEUhXavXDxR3lHvOkjV342+KKAaYJNcr1ZxqtfcTT6qeKuLi9yEA1CLyEgV07LIF53TncphDZy02KH0fLBp4igg16aqMt44XGRwVqz4zF3LQo/johaywHulXt+ZO4ZdO2+cAy0741JO9xp6bTyvEafEi2clEmplwkRAtD2/hWwOZoXoze0IpZXvV8bO5hQ+Qs+HjNFVGSbt6YkWYbX+OuRbnOGSG04+FOegDxW8R1MQIuRey+6Ndjj6Q8="
 language: node_js
 node_js:
   - "8.10"
   - "10"
 install:
   - curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc
+  - npm config set @d2l:registry $ARTIFACTORY_REGISTRY
   - npm install
 script:
   - set -e
   - npm run lint
   - npm run test
-env:
-  global:
-  - ARTIFACTORY_REGISTRY: https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local
-  - ARTIFACTORY_USER: rw-travisci-license-checker
-  - secure: "UsznDI8nfD6F/EYkCo3gNrKe5M0l1vYb4ZCwgJJdWjxzIYnqzGP2TWK4vGiOAQ+NJAn5wEpuWONlmyIumoebXa5ZWyCp7H/keme1uKOn0tEqnVkiJhAiTkWwrzOnZ5E3B+wtvwEUB3lUp5AwVFjdq1pQv6rPcznVSNsNwG63WhrmtRmpjSeZDO/oLF5XbGcwr2c1K5oLI4twjY6+HhJL5/vUoti1u+pqOxFBPL1K8Mk33x3ELBmpW8xTNnLE/2CfzL5b1oJWEmxk0i1i/8xDk1b+Z1+Dt8oguiMHjbGBHShUK2fQFPPMCc8oU1dbF9WyEp6kCyUjSxWxyktxOB/mfVLiiMHLchJYwzimdcXcm5WOhNmbolejiwlOn/4VF57El+GOPY9mXnEHW52VBXp84p/5FKoxrvT6IqyvCTqFdr0A1GYHkOUEUhXavXDxR3lHvOkjV342+KKAaYJNcr1ZxqtfcTT6qeKuLi9yEA1CLyEgV07LIF53TncphDZy02KH0fLBp4igg16aqMt44XGRwVqz4zF3LQo/johaywHulXt+ZO4ZdO2+cAy0741JO9xp6bTyvEafEi2clEmplwkRAtD2/hWwOZoXoze0IpZXvV8bO5hQ+Qs+HjNFVGSbt6YkWYbX+OuRbnOGSG04+FOegDxW8R1MQIuRey+6Ndjj6Q8="
 deploy:
   skip_cleanup: true
   provider: script
-  script: 'curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc && npm install -g publish && TRAVIS="" publish'
+  script: npm publish --registry $ARTIFACTORY_REGISTRY
   on:
     branch: master
     tags: true
