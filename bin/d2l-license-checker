@@ -9,28 +9,40 @@ const { promisify } = require('util');
 
 const _ = require('lodash');
 const checker = require('license-checker');
-const spdx = require('spdx');
+const spdxIds = require('spdx-license-ids');
 const satisfies = require('spdx-satisfies');
 
 const OverrideHelper = require('../lib/override-helper');
 
-const defaultConfigFilePath = '.licensechecker.json';
 const argv = require('yargs')
 	.usage(
-	'$0 [project-path [config-file-path]]\n\n' +
-		'  If no project path is given, the current directory with be used\n' +
-		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
-	.help('h')
-	.alias('h', 'help')
-	.alias('t', 'generate-template')
-	.describe('t', 'Outputs licenses that failed the checker to standard out.')
+	'$0 [options] [project-path]\n\n' +
+		'  If no project path is given, defaults to the current directory')
+	.help('help')
+	.alias('help', 'h')
+	.options('config-file', {
+		alias: 'c',
+		default: '.licensechecker.json',
+		describe: 'Path to config file. Merged with default settings unless --no-d2l is specified.'
+	})
+	.option('generate-template', {
+		alias: 't',
+		describe: 'Outputs licenses that failed the checker to standard out.'
+	})
+	.option('d2l', {
+		boolean: true,
+		default: true,
+		describe: 'Use default settings specific to D2L. If disabled, allows \'acceptedLicenses\' in config file.'
+	})
 	.strict()
 	.argv;
 const projectDir = argv._[0] || process.cwd();
-const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
-const configAcceptedEntries = ['manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
+const configFilePath = path.resolve(path.join(projectDir, argv['config-file']));
+const configAcceptedEntries = argv.d2l ?
+	['manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'] :
+	['manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides', 'acceptedLicenses'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
-const specialExemptionPrefix = 'D2L-Open-Source-Special-Exemption';
+const specialExemptionPrefix = 'Special-Exemption';
 
 let acceptedSpdxExpr;
 let acceptedNonSpdx;
@@ -61,14 +73,24 @@ function readConfig() {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
-	const defaultConfig = require(`../config/default_config.json`);
-	config.acceptedLicenses = defaultConfig.acceptedLicenses;
-	config.acceptedScopes = _.union(defaultConfig.acceptedScopes, (config.acceptedScopes || []));
-	config.defaultManualOverrides = defaultConfig.manualOverrides;
-	config.manualOverrides = _.assign({}, defaultConfig.manualOverrides, (config.manualOverrides || {}));
-	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides; // eslint-disable-line eqeqeq
+
+	config.acceptedLicenses = config.acceptedLicenses || [];
+	config.acceptedScopes = config.acceptedScopes || [];
+	config.defaultManualOverrides = {};
+	config.manualOverrides = config.manualOverrides || {};
+	if (argv.d2l) {
+		const d2lDefaultConfig = require(`../config/d2l-default-config.json`);
+		config.acceptedLicenses = d2lDefaultConfig.acceptedLicenses;
+		config.acceptedScopes = _.union(d2lDefaultConfig.acceptedScopes, config.acceptedScopes);
+		config.defaultManualOverrides = d2lDefaultConfig.manualOverrides;
+		config.manualOverrides = _.assign({}, d2lDefaultConfig.manualOverrides, config.manualOverrides);
+		config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides !== undefined ?
+			config.ignoreUnusedManualOverrides :
+			d2lDefaultConfig.ignoreUnusedManualOverrides;
+	}
+
 	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
-		if (spdx.valid(license)) {
+		if (spdxIds.includes(license)) {
 			return true;
 		} else if (spdxExceptions.indexOf(license) >= 0) {
 			return false;
@@ -88,7 +110,7 @@ function checkLicense(licenseString, packageString) {
 		licenseString = licenseString.substring(0, licenseString.length - 1);
 	} */
 	return (
-		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
+		(acceptedSpdxExpr && spdxIds.includes(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
 		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
 		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
@@ -126,9 +148,9 @@ function processLicenseCheckerOutput(json) {
 		}
 		handleError(
 			'Some licenses didn\'t pass the requirements (see above).\n' +
-			`Please check the offending packages or update the configuration file (${defaultConfigFilePath}).\n` +
+			`Please check the offending packages or update the configuration file (${argv['config-file']}).\n` +
 			'You can generate a template by running this tool with --generate-template.\n' +
-			'You can find more information at https://github.com/Brightspace/license-checker-ci', 2);
+			'You can find more information at https://github.com/Brightspace/d2l-license-checker', 2);
 	} else {
 		console.error('All licenses passed the check.');
 	}

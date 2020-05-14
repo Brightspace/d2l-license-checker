@@ -1,26 +1,26 @@
 {
   "name": "d2l-license-checker",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Simple tool to check licenses of all npm dependencies in a project",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Brightspace/license-checker-ci"
+    "url": "https://github.com/Brightspace/d2l-license-checker"
   },
   "scripts": {
-    "license-check": "node bin/license-checker-ci",
+    "license-check": "node bin/d2l-license-checker",
     "lint": "eslint lib/** bin/** test",
     "test": "mocha --timeout 30000",
     "posttest": "npm run license-check"
   },
   "bin": {
-    "license-checker-ci": "./bin/license-checker-ci"
+    "d2l-license-checker": "./bin/d2l-license-checker"
   },
   "dependencies": {
     "license-checker": "^25.0.1",
     "lodash": "^4.17.15",
     "semver": "^6.3.0",
-    "spdx": "^0.5.2",
+    "spdx-license-ids": "^3.0.5",
     "spdx-satisfies": "^5.0.0",
     "yargs": "^13.3.0"
   },

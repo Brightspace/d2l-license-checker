@@ -1,0 +1,8 @@
+{
+  "acceptedLicenses": [
+    "GPL-3.0-only"
+  ],
+  "manualOverrides": {
+    "bluebird@3.4.7": "GPL-3.0-only"
+  }
+}

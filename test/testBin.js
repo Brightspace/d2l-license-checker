@@ -9,9 +9,16 @@ const npmCmd = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 const dataDir = path.join('test', 'data');
 const verbose = true; // turn this on if you want to see checker command output
 
-function checkProject(projectPath, install = true) {
+function checkProject({projectPath = undefined, configFile = undefined, noD2l = false, install = true}) {
 
-	let args = [path.join('bin', 'license-checker-ci')];
+	let args = [path.join('bin', 'd2l-license-checker')];
+	if (configFile) {
+		args.push('--config-file');
+		args.push(configFile);
+	}
+	if (noD2l) {
+		args.push('--no-d2l');
+	}
 	if (projectPath) {
 		args.push(projectPath);
 	}
@@ -50,54 +57,93 @@ const makeTestPath = (proj) => path.join(dataDir, proj);
 
 describe('Command invocation', () => {
 	it('should accept a project with no dependencies', () => {
-		assert.equal(checkProject(makeTestPath('proj-no-deps')), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-no-deps')
+		}), 0);
 	});
 
 	it('should allow a project with no configuration file', () => {
-		assert.equal(checkProject(makeTestPath('proj-no-cfg')), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-no-cfg')
+		}), 0);
 	});
 
 	it('should ignore dev dependencies', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-dev')), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-ok-dev')
+		}), 0);
 	});
 
 	it('should ignore prod dependencies', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-prod')), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-ok-prod')
+		}), 0);
 	});
 
 	it('should reject bad config', () => {
-		assert.equal(checkProject(makeTestPath('proj-bad-cfg')), 1);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-bad-cfg')
+		}), 1);
 	});
 
 	it('should reject license (dev)', () => {
-		assert.equal(checkProject(makeTestPath('proj-license-issue-dev')), 2);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-license-issue-dev')
+		}), 2);
 	});
 
 	it('should reject license (prod)', () => {
-		assert.equal(checkProject(makeTestPath('proj-license-issue')), 2);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-license-issue')
+		}), 2);
 	});
 
 	it('should accept the d2l scope', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-scope-d2l'), false), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-ok-scope-d2l'),
+			install: false
+		}), 0);
 	});
 
 	it('should reject a non-whitelisted scope', () => {
-		assert.equal(checkProject(makeTestPath('proj-license-issue-scope')), 2);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-license-issue-scope')
+		}), 2);
 	});
 
 	it('should accept an in-range override', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-range')), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-ok-range')
+		}), 0);
 	});
 
 	it('should reject an out-of-range override', () => {
-		assert.equal(checkProject(makeTestPath('proj-bad-override-range')), 2);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-bad-override-range')
+		}), 2);
 	});
 
 	it('should allow a special exemption override', () => {
-		assert.equal(checkProject(makeTestPath('proj-ok-override-special')), 0);
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-ok-override-special')
+		}), 0);
+	});
+
+	it('should allow a custom file', () => {
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-ok-custom-file'),
+			configFile: 'myfile.json'
+		}), 0);
+	});
+
+	it('should allow acceptedLicenses for no-d2l', () => {
+		assert.equal(checkProject({
+			projectPath: makeTestPath('proj-no-d2l'),
+			noD2l: true
+		}), 0);
 	});
 
 	it('self test', () => {
-		assert.equal(checkProject('.'), 0);
+		assert.equal(checkProject({}), 0);
 	});
 });
