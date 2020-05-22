@@ -9,7 +9,7 @@ const { promisify } = require('util');
 
 const _ = require('lodash');
 const checker = require('license-checker');
-const spdx = require('spdx');
+const spdxIds = require('spdx-license-ids');
 const satisfies = require('spdx-satisfies');
 
 const OverrideHelper = require('../lib/override-helper');
@@ -68,7 +68,7 @@ function readConfig() {
 	config.manualOverrides = _.assign({}, defaultConfig.manualOverrides, (config.manualOverrides || {}));
 	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides; // eslint-disable-line eqeqeq
 	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
-		if (spdx.valid(license)) {
+		if (spdxIds.includes(license)) {
 			return true;
 		} else if (spdxExceptions.indexOf(license) >= 0) {
 			return false;
@@ -88,7 +88,7 @@ function checkLicense(licenseString, packageString) {
 		licenseString = licenseString.substring(0, licenseString.length - 1);
 	} */
 	return (
-		(acceptedSpdxExpr && spdx.valid(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
+		(acceptedSpdxExpr && spdxIds.includes(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
 		|| acceptedNonSpdx.indexOf(licenseString) >= 0
 		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
 		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
@@ -128,7 +128,7 @@ function processLicenseCheckerOutput(json) {
 			'Some licenses didn\'t pass the requirements (see above).\n' +
 			`Please check the offending packages or update the configuration file (${defaultConfigFilePath}).\n` +
 			'You can generate a template by running this tool with --generate-template.\n' +
-			'You can find more information at https://github.com/Brightspace/license-checker-ci', 2);
+			'You can find more information at https://github.com/Brightspace/d2l-license-checker', 2);
 	} else {
 		console.error('All licenses passed the check.');
 	}

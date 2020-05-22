@@ -1,16 +1,14 @@
-[![Build Status](https://travis-ci.com/Brightspace/license-checker-ci.svg?token=6ZPKDbnLEoi6zxDfhpAL&branch=master)](https://travis-ci.com/Brightspace/license-checker-ci)
+[![Build Status](https://api.travis-ci.com/Brightspace/d2l-license-checker.svg?branch=master)](https://travis-ci.com/Brightspace/d2l-license-checker-ci)
 
-# license-checker-ci
+# d2l-license-checker
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/Brightspace/license-checker-ci.svg?token=35c8aaa2a23218042f46e29b59702f97633d82b3ef2fecefaa9b760fb0d3a305)](https://greenkeeper.io/)
-
-Simple tool to continuously check licenses of all npm dependencies in a project. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
+Simple tool to check licenses of all npm dependencies in a project against an approved set of licenses. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
 
 ## How to use
 
-1. Add this package as a dev-requirement:
+1. Add this package as a development dependency:
 
-    `node install --save-dev @d2l/d2l-license-checker`
+    `npm install --save-dev d2l-license-checker`
 
 1. Define a new script in your `package.json` by adding the following lines:
     ```json
@@ -33,21 +31,21 @@ Simple tool to continuously check licenses of all npm dependencies in a project.
 
 1. Make sure `npm run license-check` is called in your CI build script or as part as your tests
 
-If licenses do not pass the test, you can run `npm run license-checker -- --t > .licensechecker.template.json` to generate a template file that can be copied and pasted into the config file for easy overrides.
+If licenses do not pass the test, you can run `npm run license-check -- --generate-template > .licensechecker.template.json` to generate a template file that can be copied and pasted into the config file for easy overrides.
 
 ## Configuration file
 
 The configuration file is a simple JSON file with the following optional entries:
 
-* `"manualOverrides"`: Object where each key is a package name and version (see above example), and the value is a valid SPDX ID. The version number can be a semver expression. You might want to use this to manually specify the license of a package for which the license is not specified or for which it uses the wrong license identifier.
+* `"manualOverrides"`: Object where each key is a package name and version (see above example), and the value is a valid SPDX ID. The version number can be a semver expression. You can use this to manually specify the license of a package for which the license is not specified in its `package.json` file or where an invalid SPDX ID is used. The default config is a set of overrides for packages used by D2L.
 
   In addition to the [SPDX IDs](https://spdx.org/licenses/), you can use the following strings:
 
   - `Public-Domain`: identifier for public domain code (not supported by SPDX)
-  - `Project-Owner`: identifier indicating that you own this package and that its license can be ignored (doesn't need to be added to `acceptedlicenses`)
-  - `D2L-Open-Source-Special-Exemption (license-name)`: identifier indicating that although `license-name` is not a D2L-approved open source license, its use has been granted a special-exemption for this project.
+  - `Project-Owner`: identifier indicating that you own this package and that its license can be ignored (doesn't need to be added to `"acceptedlicenses"`)
+  - `D2L-Open-Source-Special-Exemption (license-name)`: identifier indicating that although `license-name` is not in the `"acceptedLicenses"` set, its use has been granted a special exemption for this project.
 
-* `"acceptedScopes"`: List of [NPM scopes](https://docs.npmjs.com/misc/scope) that should always be accepted. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
+* `"acceptedScopes"`: List of [NPM scopes](https://docs.npmjs.com/misc/scope) that should always be allowed. This is convenient if your team uses its own scoped registry. Do not include the `@` or `/` characters. The default config is `["d2l"]`.
 
 * `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`false` by default)
 
@@ -58,4 +56,4 @@ The configuration file is a simple JSON file with the following optional entries
 1. Commit/merge changes via pull request.
 1. Tag merge commit: `git tag -a <tag_name> -m "<comment>"`
 1. Push tag: `git push origin <tag_name>`
-1. Travis will automatically publish tagged commits to Artifactory.
+1. Travis will automatically publish tagged commits to npmjs.org.
