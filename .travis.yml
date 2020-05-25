@@ -1,24 +1,18 @@
-env:
-  global:
-  - ARTIFACTORY_REGISTRY: https://d2lartifacts.artifactoryonline.com/d2lartifacts/api/npm/npm-local
-  - ARTIFACTORY_USER: rw-travisci-license-checker
-  - secure: "UsznDI8nfD6F/EYkCo3gNrKe5M0l1vYb4ZCwgJJdWjxzIYnqzGP2TWK4vGiOAQ+NJAn5wEpuWONlmyIumoebXa5ZWyCp7H/keme1uKOn0tEqnVkiJhAiTkWwrzOnZ5E3B+wtvwEUB3lUp5AwVFjdq1pQv6rPcznVSNsNwG63WhrmtRmpjSeZDO/oLF5XbGcwr2c1K5oLI4twjY6+HhJL5/vUoti1u+pqOxFBPL1K8Mk33x3ELBmpW8xTNnLE/2CfzL5b1oJWEmxk0i1i/8xDk1b+Z1+Dt8oguiMHjbGBHShUK2fQFPPMCc8oU1dbF9WyEp6kCyUjSxWxyktxOB/mfVLiiMHLchJYwzimdcXcm5WOhNmbolejiwlOn/4VF57El+GOPY9mXnEHW52VBXp84p/5FKoxrvT6IqyvCTqFdr0A1GYHkOUEUhXavXDxR3lHvOkjV342+KKAaYJNcr1ZxqtfcTT6qeKuLi9yEA1CLyEgV07LIF53TncphDZy02KH0fLBp4igg16aqMt44XGRwVqz4zF3LQo/johaywHulXt+ZO4ZdO2+cAy0741JO9xp6bTyvEafEi2clEmplwkRAtD2/hWwOZoXoze0IpZXvV8bO5hQ+Qs+HjNFVGSbt6YkWYbX+OuRbnOGSG04+FOegDxW8R1MQIuRey+6Ndjj6Q8="
 language: node_js
 node_js:
   - "8.10"
   - "10"
-install:
-  - curl -ks -u$ARTIFACTORY_USER:$ARTIFACTORY_PASS "${ARTIFACTORY_REGISTRY}/auth/d2l" -o .npmrc
-  - npm config set @d2l:registry $ARTIFACTORY_REGISTRY
-  - npm install
 script:
   - set -e
   - npm run lint
   - npm run test
 deploy:
+  provider: npm
+  email: d2ltravisdeploy@d2l.com
   skip_cleanup: true
-  provider: script
-  script: npm publish --registry $ARTIFACTORY_REGISTRY
+  api_key:
+    # 57c4......d343
+    secure: "LNAzS24n4D+NdzkRyvGemkOjBqoJCewfYI1y11geZ13ug6Uk0dpkdad0RpLy9xAgiT7N2QJrO5tXmK1XdqquGQd6G27qkM9iMW/+n0hTmgrxyZM8imPAVri3pWakjEGKfZFDC6Wd4s61TCWZXKhTnh+X7p77fcYZD/3nXHFlx3GfSENrmyB7w2bieFdSEdhuOjHzO7MW8yG5sp53GPYEh86FY0hn9tPoNCLm10rU0J90TmPJJ/WYXC3Q+PyQvXmABV3o8FUq/rsYvCXuFRg1KWaU1IAOF9kicHP0zKENojbRJl13cl27Qojp2JsnCqQeG+Q8MGHyNnvFJzSwVskFk7qZs46sXEyCteIQPb2MpOaJ8miZl2yN4nrAAP9HTe9jSu/5Rkh16Z+zbeVy9j3y6xtuNcj1gG0Nk/A5UhLL2OXAkr39M5u/EpfgzEwkGTe0eZj4PuJJBSSlo4U0QD8sqRVqFUUpm9+LnqMzTWTMvEAksdyV1TNDP4s/8sJisD2ivhaNnf9mzllvOH6wBh75AnwCCOsCqNZdncAW68PnLN82xsXZQaziEGlgdv6cocrkvTI2wWbHZ+z8M/uhDaG002iX3B/9SleluyQwUyz+Dyd0H1rb92zRapO8lBY0RXqKYzalVlsL0FCMlUStucyoVFbVHeXYnhjpcDnbtb9dz/k="
   on:
     branch: master
     tags: true
