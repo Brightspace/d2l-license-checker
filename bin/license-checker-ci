@@ -79,6 +79,15 @@ function readConfig() {
 	acceptedNonSpdx = partitions[1].concat('Project-Owner');
 }
 
+function satisfiesNoThrow(first, second) {
+	try {
+		return satisfies(first, second);
+	} catch (err) {
+		// throws on invalid SPDX ID
+		return false;
+	}
+}
+
 function checkLicense(licenseString, packageString) {
 	if (licenseString.length === 0) {
 		return false;
@@ -88,11 +97,11 @@ function checkLicense(licenseString, packageString) {
 		licenseString = licenseString.substring(0, licenseString.length - 1);
 	} */
 	return (
-		(acceptedSpdxExpr && spdxIds.includes(licenseString) && satisfies(licenseString, acceptedSpdxExpr))
-		|| acceptedNonSpdx.indexOf(licenseString) >= 0
+		acceptedNonSpdx.indexOf(licenseString) >= 0
 		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
 		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
 		|| licenseString.startsWith(specialExemptionPrefix)
+		|| (acceptedSpdxExpr && satisfiesNoThrow(licenseString, acceptedSpdxExpr))
 	);
 }
 

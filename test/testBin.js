@@ -97,6 +97,14 @@ describe('Command invocation', () => {
 		assert.equal(checkProject(makeTestPath('proj-ok-override-special')), 0);
 	});
 
+	it('should allow valid SPDX expression', () => {
+		assert.equal(checkProject(makeTestPath('proj-ok-spdx-expression')), 0);
+	});
+
+	it('should reject invalid SPDX expression', () => {
+		assert.equal(checkProject(makeTestPath('proj-bad-spdx-expression')), 2);
+	});
+
 	it('self test', () => {
 		assert.equal(checkProject('.'), 0);
 	});
