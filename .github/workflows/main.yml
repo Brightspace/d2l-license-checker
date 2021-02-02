@@ -14,5 +14,3 @@ jobs:
       - uses: Brightspace/third-party-actions@neverendingqs/gh-action-node-update-deps
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          bump-version: patch
