@@ -1,7 +1,9 @@
 language: node_js
 node_js:
-  - "8.10"
   - "10"
+  - "12"
+  - "14"
+  - "node"
 script:
   - set -e
   - npm run lint
