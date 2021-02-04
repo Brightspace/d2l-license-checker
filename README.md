@@ -54,6 +54,5 @@ The configuration file is a simple JSON file with the following optional entries
 1. Update code.
 1. Update version in `package.json`.
 1. Commit/merge changes via pull request.
-1. Tag merge commit: `git tag -a <tag_name> -m "<comment>"`
-1. Push tag: `git push origin <tag_name>`
+1. Run `Release new version` GitHub action workflow.
 1. Travis will automatically publish tagged commits to npmjs.org.
