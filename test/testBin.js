@@ -11,7 +11,7 @@ const verbose = true; // turn this on if you want to see checker command output
 
 function checkProject(projectPath, install = true) {
 
-	let args = [path.join('bin', 'license-checker-ci')];
+	let args = [path.join('bin', 'd2l-license-checker')];
 	if (projectPath) {
 		args.push(projectPath);
 	}

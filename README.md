@@ -13,7 +13,7 @@ Simple tool to check licenses of all npm dependencies in a project against an ap
 1. Define a new script in your `package.json` by adding the following lines:
     ```json
     "scripts": {
-      "license-check": "license-checker-ci"
+      "license-check": "d2l-license-checker"
     }
     ```
 
