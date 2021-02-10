@@ -1,0 +1,154 @@
+#!/usr/bin/env node
+'use strict';
+
+// SPDX license IDs: https://spdx.org/licenses/
+
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
+
+const _ = require('lodash');
+const checker = require('license-checker');
+const spdxIds = require('spdx-license-ids');
+const satisfies = require('spdx-satisfies');
+
+const OverrideHelper = require('../lib/override-helper');
+
+const defaultConfigFilePath = '.licensechecker.json';
+const argv = require('yargs')
+	.usage(
+	'$0 [project-path [config-file-path]]\n\n' +
+		'  If no project path is given, the current directory with be used\n' +
+		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
+	.help('h')
+	.alias('h', 'help')
+	.alias('t', 'generate-template')
+	.describe('t', 'Outputs licenses that failed the checker to standard out.')
+	.strict()
+	.argv;
+const projectDir = argv._[0] || process.cwd();
+const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
+const configAcceptedEntries = ['manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
+const spdxExceptions = ['Public-Domain', 'Project-Owner'];
+const specialExemptionPrefix = 'D2L-Open-Source-Special-Exemption';
+
+let acceptedSpdxExpr;
+let acceptedNonSpdx;
+let config;
+let projectPackage;
+const failedLicenses = {};
+
+function handleError(err, code) {
+	console.error('ERROR: ' + err.replace(/\n/g, '\n       '));
+	/* eslint no-process-exit:0 */
+	process.exit(code || 1);
+}
+
+function readConfig() {
+	try {
+		let data = fs.readFileSync(configFilePath, {encoding: 'utf8'});
+		config = JSON.parse(data);
+	} catch (err) {
+		console.error('No config file specified, using unmodified defaults.');
+		config = {};
+	}
+	for (let key in config) {
+		if (configAcceptedEntries.indexOf(key) < 0) {
+			handleError(`${configFilePath}: "${key}" is not a valid entry (must be one of ${configAcceptedEntries}).`);
+		}
+	}
+	if (config.manualOverrides && typeof config.manualOverrides !== 'object') {
+		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
+	}
+	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
+	const defaultConfig = require(`../config/default_config.json`);
+	config.acceptedLicenses = defaultConfig.acceptedLicenses;
+	config.acceptedScopes = _.union(defaultConfig.acceptedScopes, (config.acceptedScopes || []));
+	config.defaultManualOverrides = defaultConfig.manualOverrides;
+	config.manualOverrides = _.assign({}, defaultConfig.manualOverrides, (config.manualOverrides || {}));
+	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides; // eslint-disable-line eqeqeq
+	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
+		if (spdxIds.includes(license)) {
+			return true;
+		} else if (spdxExceptions.indexOf(license) >= 0) {
+			return false;
+		}
+		handleError(`${configFilePath}: "${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
+	});
+	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(partitions[0], ' OR ') + ')' : undefined;
+	acceptedNonSpdx = partitions[1].concat('Project-Owner');
+}
+
+function satisfiesNoThrow(first, second) {
+	try {
+		return satisfies(first, second);
+	} catch (err) {
+		// throws on invalid SPDX ID
+		return false;
+	}
+}
+
+function checkLicense(licenseString, packageString) {
+	if (licenseString.length === 0) {
+		return false;
+	}
+	/* use this code if you want to accept guessed packages
+	if (licenseString[licenseString.length - 1] === '*') {
+		licenseString = licenseString.substring(0, licenseString.length - 1);
+	} */
+	return (
+		acceptedNonSpdx.indexOf(licenseString) >= 0
+		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
+		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
+		|| licenseString.startsWith(specialExemptionPrefix)
+		|| (acceptedSpdxExpr && satisfiesNoThrow(licenseString, acceptedSpdxExpr))
+	);
+}
+
+function processLicenseCheckerOutput(json) {
+	let fail = false;
+	const overrideHelper = new OverrideHelper(config.manualOverrides, config.defaultManualOverrides);
+	_.forEach(json, (value, key) => {
+		// When the licenses are provided as an array, always use the first string
+		const license = overrideHelper.find(key) ||
+			(Array.isArray(value.licenses) ? value.licenses[0] : value.licenses);
+		if (!checkLicense(license, key)) {
+			fail = true;
+
+			failedLicenses[key] = license;
+			console.error(
+				`>>> Package "${key}" doesn't meet license requirements (${license}).\n` +
+				`    Repository: ${value.repository}\n` +
+				`    Path: ${value.path || 'UNKNOWN'}\n`
+			);
+		}
+	});
+	if (!config.ignoreUnusedManualOverrides) {
+		overrideHelper.unvisited.forEach((override) => {
+			console.error(`WARNING: Manual override "${override}" is never used, consider removing it.\n`);
+		});
+	}
+
+	if (fail) {
+		if (argv.generateTemplate) {
+			console.log(JSON.stringify({ 'manualOverrides': failedLicenses }, null, 2));
+		}
+		handleError(
+			'Some licenses didn\'t pass the requirements (see above).\n' +
+			`Please check the offending packages or update the configuration file (${defaultConfigFilePath}).\n` +
+			'You can generate a template by running this tool with --generate-template.\n' +
+			'You can find more information at https://github.com/Brightspace/d2l-license-checker', 2);
+	} else {
+		console.error('All licenses passed the check.');
+	}
+}
+
+const npmChecker = promisify(checker.init);
+
+readConfig();
+
+// the semantics of our arguments are different than license-checker (see their --help)
+npmChecker({ start: projectDir })
+	.catch(err => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err)))
+	.then(json => processLicenseCheckerOutput(json))
+	.catch(err => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
