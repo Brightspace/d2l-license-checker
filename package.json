@@ -8,12 +8,13 @@
     "url": "https://github.com/Brightspace/d2l-license-checker"
   },
   "scripts": {
-    "license-check": "node bin/license-checker-ci",
+    "license-check": "node bin/d2l-license-checker",
     "lint": "eslint lib/** bin/** test",
     "test": "mocha --timeout 30000",
     "posttest": "npm run license-check"
   },
   "bin": {
+    "d2l-license-checker": "./bin/d2l-license-checker",
     "license-checker-ci": "./bin/license-checker-ci"
   },
   "dependencies": {
