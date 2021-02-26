@@ -64,6 +64,7 @@
     "esutils@<3": "BSD-2-Clause",
     "extend@<2": "MIT",
     "extsprintf@<2": "MIT",
+    "fast-xml-parser@<3": "MIT",
     "formatio@<2": "BSD-3-Clause",
     "formidable@<2": "MIT",
     "glob@<4": "ISC",
