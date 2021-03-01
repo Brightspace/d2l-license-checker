@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "license-checker": "^25.0.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "semver": "^7.3.4",
     "spdx-license-ids": "^3.0.7",
     "spdx-satisfies": "^5.0.0",
@@ -27,8 +27,8 @@
   },
   "devDependencies": {
     "chai": "^4.3.0",
-    "eslint": "^7.19.0",
-    "mocha": "^8.2.1",
+    "eslint": "^7.21.0",
+    "mocha": "^8.3.0",
     "pre-commit": "^1.2.2"
   },
   "pre-commit": [
