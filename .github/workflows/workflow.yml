@@ -1,0 +1,46 @@
+name: D2L License Checker CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Test
+    timeout-minutes: 2
+    strategy:
+      matrix:
+        node: ['10', '12', '14', '15']
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Setup Node
+        uses: Brightspace/third-party-actions@actions/setup-node
+        with:
+          node-version: ${{ matrix.node }}
+      - name: npm install
+        run: npm ci
+      - name: lint
+        run: npm run lint
+      - name: test
+        run: npm run test
+
+  release:
+    if: github.ref == 'refs/heads/master'
+    name: Release
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Setup Node
+        uses: Brightspace/third-party-actions@actions/setup-node
+      - name: Semantic Release
+        if: github.ref == 'refs/heads/master'
+        uses: BrightspaceUI/actions/semantic-release@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.D2L_GITHUB_TOKEN }}
+          NPM: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
