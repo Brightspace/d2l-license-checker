@@ -1,11 +1,15 @@
 name: D2L License Checker CI
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
     name: Test
+    runs-on: ubuntu-latest
     timeout-minutes: 2
     strategy:
       matrix:
@@ -26,6 +30,7 @@ jobs:
 
   release:
     if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
     needs: test
     name: Release
     timeout-minutes: 5
