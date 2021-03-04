@@ -10,7 +10,7 @@
   "scripts": {
     "license-check": "node bin/d2l-license-checker",
     "lint": "eslint lib/** bin/** test",
-    "test": "mocha --timeout 30000",
+    "test": "mocha --timeout 120000",
     "posttest": "npm run license-check"
   },
   "bin": {
