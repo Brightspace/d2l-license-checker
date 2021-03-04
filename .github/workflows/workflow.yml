@@ -1,11 +1,7 @@
 name: D2L License Checker CI
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  - push
+  - pull_request
 
 jobs:
   test:
@@ -30,6 +26,7 @@ jobs:
 
   release:
     if: github.ref == 'refs/heads/master'
+    needs: test
     name: Release
     timeout-minutes: 5
     steps:
