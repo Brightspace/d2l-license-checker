@@ -2,7 +2,7 @@
 
 # d2l-license-checker
 
-Simple tool to check licenses of all npm dependencies in a project against an approved set of licenses. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
+A simple tool to check licenses of all npm dependencies in a project against an approved set of licenses. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
 
 ## How to use
 
