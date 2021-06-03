@@ -14,3 +14,5 @@ jobs:
       - uses: Brightspace/third-party-actions@neverendingqs/gh-action-node-update-deps
         env:
           GITHUB_TOKEN: ${{ secrets.D2L_GITHUB_TOKEN }}
+        with:
+          commit-message-prefix: fix
