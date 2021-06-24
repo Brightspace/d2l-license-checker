@@ -33,6 +33,10 @@ A simple tool to check licenses of all npm dependencies in a project against an 
 
 If licenses do not pass the test, you can run `npm run license-check -- --generate-template > .licensechecker.template.json` to generate a template file that can be copied and pasted into the config file for easy overrides.
 
+## Narrowing Analysis
+
+If you only want to check a certain type of dependency, you can supply either `--production-only` or `--development-only` to only check the associated dependency type. These options are mutually exclusive, meaning you can only supply one of the flags. Excluding both will simply check all dependencies.
+
 ## Configuration file
 
 The configuration file is a simple JSON file with the following optional entries:
