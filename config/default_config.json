@@ -85,6 +85,7 @@
     "log-driver@<2": "ISC",
     "log@<2": "MIT",
     "map-stream@<1": "MIT",
+    "memory-stream@<1": "MIT",
     "mime@<2": "MIT",
     "ms@<1": "MIT",
     "murmurhash@<1": "MIT",
