@@ -21,14 +21,14 @@
     "license-checker": "^25.0.1",
     "lodash": "^4.17.21",
     "semver": "^7.3.5",
-    "spdx-license-ids": "^3.0.9",
+    "spdx-license-ids": "^3.0.10",
     "spdx-satisfies": "^5.0.1",
-    "yargs": "^17.0.1"
+    "yargs": "^17.2.1"
   },
   "devDependencies": {
     "chai": "^4.3.4",
     "eslint": "^7.32.0",
-    "mocha": "^9.0.3",
+    "mocha": "^9.1.2",
     "pre-commit": "^1.2.2"
   },
   "pre-commit": [
