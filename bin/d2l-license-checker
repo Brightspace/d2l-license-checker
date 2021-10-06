@@ -16,10 +16,17 @@ const OverrideHelper = require('../lib/override-helper');
 
 const defaultConfigFilePath = '.licensechecker.json';
 const argv = require('yargs')
-	.usage(
-		'$0 [project-path [config-file-path]]\n\n' +
-		'  If no project path is given, the current directory with be used\n' +
-		`  If no config path is given, the file <project-path>/${defaultConfigFilePath} will be used as default.`)
+	.usage('$0 [project-path] [config-file-path]', '', yargs => {
+		yargs
+			.positional('project-path', {
+				describe: 'Path to the project from current directory.',
+				defaultDescription: 'current directory.'
+			})
+			.positional('config-file-path', {
+				describe: 'Path to configuration file from current directory.',
+				defaultDescription: `<project-path>/${defaultConfigFilePath}`
+			})
+	})
 	.help('h')
 	.alias('h', 'help')
 	.alias('t', 'generate-template')
@@ -32,8 +39,8 @@ const argv = require('yargs')
 	.boolean(['d', 'p', 't'])
 	.strict()
 	.argv;
-const projectDir = argv._[0] || process.cwd();
-const configFilePath = path.resolve(argv._[1] || path.join(projectDir, defaultConfigFilePath));
+const projectDir = argv.projectPath || process.cwd();
+const configFilePath = path.resolve(argv.configFilePath || path.join(projectDir, defaultConfigFilePath));
 const configAcceptedEntries = ['manualOverrides', 'acceptedScopes', 'ignoreUnusedManualOverrides'];
 const spdxExceptions = ['Public-Domain', 'Project-Owner'];
 const specialExemptionPrefix = 'D2L-Open-Source-Special-Exemption';
