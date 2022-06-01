@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 2
     strategy:
       matrix:
-        node: ['12', '14', '16']
+        node: ['12', '14', '16', '18']
     steps:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
