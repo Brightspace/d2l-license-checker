@@ -1,5 +1,3 @@
-[![Build Status](https://api.travis-ci.com/Brightspace/d2l-license-checker.svg?branch=master)](https://travis-ci.com/Brightspace/d2l-license-checker-ci)
-
 # d2l-license-checker
 
 A simple tool to check licenses of all npm dependencies in a project against an approved set of licenses. Can be added to a test suite / CI to get a warning about packages not meeting predefined license requirements. This is basically a wrapper around [`davglass/license-checker`](https://github.com/davglass/license-checker)
@@ -53,10 +51,8 @@ The configuration file is a simple JSON file with the following optional entries
 
 * `"ignoreUnusedManualOverrides"`: Set it to true if you do not want warnings logged when you have unused manual overrides (`false` by default)
 
-## Contributing
+## Versioning and Releasing
 
-1. Update code.
-1. Update version in `package.json`.
-1. Commit/merge changes via pull request.
-1. Run `Release new version` GitHub action workflow.
-1. Travis will automatically publish tagged commits to npmjs.org.
+This repo is configured to use `semantic-release`. Commits prefixed with `fix:` and `feat:` will trigger patch and minor releases when merged to `main`.
+
+To learn how to create major releases and release from maintenance branches, refer to the [semantic-release GitHub Action](https://github.com/BrightspaceUI/actions/tree/main/semantic-release) documentation.
