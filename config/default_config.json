@@ -24,7 +24,9 @@
     "X11",
     "Zlib"
   ],
-  "acceptedScopes": ["d2l"],
+  "acceptedScopes": [
+    "d2l"
+  ],
   "ignoreUnusedManualOverrides": false,
   "manualOverrides": {
     "ap@<1": "MIT",
