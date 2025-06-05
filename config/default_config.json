@@ -95,7 +95,7 @@
     "murmurhash@<1": "MIT",
     "nomnom@<2": "MIT",
     "npm-license@<1": "BSD-3-Clause",
-    "@nutrient-sdk/viewer@<1": "SEE LICENSE IN https://www.nutrient.io/legal/Nutrient_SDK_User_Evaluation_Subscription_Agreement",
+    "@nutrient-sdk/viewer@>=1": "D2L-Open-Source-Special-Exemption (SEE LICENSE IN https://www.nutrient.io/legal/Nutrient_SDK_User_Evaluation_Subscription_Agreement)",
     "object-component@<1": "MIT",
     "only@<1": "MIT",
     "optimist@<1": "MIT",
