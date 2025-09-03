@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     strategy:
+      fail-fast: false
       matrix:
         node: ['12', '14', '16', '18', '20']
     steps:
@@ -42,7 +43,7 @@ jobs:
       - name: Setup Node
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
-          node-version: 20
+          node-version: 12 # lowest version in test matrix
       - name: Semantic Release
         if: github.ref == 'refs/heads/master'
         uses: BrightspaceUI/actions/semantic-release@main

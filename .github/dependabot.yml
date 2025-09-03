@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    open-pull-requests-limit: 99
+    directory: /
+    schedule:
+      interval: weekly
+      time: '08:00'
+      timezone: America/Toronto
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-patch']
