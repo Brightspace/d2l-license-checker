@@ -30,3 +30,4 @@ jobs:
           GITHUB_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}
           COMMIT_MESSAGE: Update Dependencies
           PR_TITLE: Update Dependencies
+          DEFAULT_BRANCH: master
