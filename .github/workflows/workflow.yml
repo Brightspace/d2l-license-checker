@@ -1,11 +1,10 @@
-name: D2L License Checker CI
+name: CI
 on:
   push:
     branches:
       - master
   pull_request:
   workflow_dispatch:
-
 jobs:
   test:
     name: Test
@@ -14,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['12', '14', '16', '18', '20']
+        node: [18, 20, 22, 24]
     steps:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
@@ -28,7 +27,6 @@ jobs:
         run: npm run lint
       - name: test
         run: npm run test
-
   release:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
@@ -43,7 +41,7 @@ jobs:
       - name: Setup Node
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
-          node-version: 14 # lowest version semantic release supports
+          node-version: 18 # lowest version semantic release supports
       - name: Semantic Release
         if: github.ref == 'refs/heads/master'
         uses: BrightspaceUI/actions/semantic-release@main
