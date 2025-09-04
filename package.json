@@ -18,18 +18,18 @@
     "license-checker-ci": "./bin/license-checker-ci"
   },
   "dependencies": {
-    "license-checker": "^25.0.1",
-    "lodash": "^4.17.21",
-    "semver": "^7.3.8",
-    "spdx-license-ids": "^3.0.12",
-    "spdx-satisfies": "^5.0.1",
-    "yargs": "^17.6.2"
+    "license-checker": "^25",
+    "lodash": "^4",
+    "semver": "^7",
+    "spdx-license-ids": "^3",
+    "spdx-satisfies": "^5",
+    "yargs": "^17"
   },
   "devDependencies": {
-    "chai": "^4.3.7",
-    "eslint": "^8.28.0",
-    "mocha": "^11.7.2",
-    "pre-commit": "^1.2.2"
+    "chai": "^4",
+    "eslint": "^8",
+    "mocha": "^11",
+    "pre-commit": "^1"
   },
   "pre-commit": [
     "lint"
