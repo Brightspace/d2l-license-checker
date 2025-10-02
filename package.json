@@ -22,7 +22,7 @@
     "lodash": "^4",
     "semver": "^7",
     "spdx-license-ids": "^3",
-    "spdx-satisfies": "^5",
+    "spdx-satisfies": "^6",
     "yargs": "^17"
   },
   "devDependencies": {
