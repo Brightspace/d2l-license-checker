@@ -23,7 +23,7 @@
     "semver": "^7",
     "spdx-license-ids": "^3",
     "spdx-satisfies": "^5",
-    "yargs": "^17"
+    "yargs": "^18"
   },
   "devDependencies": {
     "chai": "^4",
