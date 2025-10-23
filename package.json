@@ -26,7 +26,7 @@
     "yargs": "^18"
   },
   "devDependencies": {
-    "chai": "^4",
+    "chai": "^6",
     "eslint": "^8",
     "mocha": "^11",
     "pre-commit": "^1"
