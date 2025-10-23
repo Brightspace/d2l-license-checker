@@ -23,7 +23,6 @@ module.exports = [
 		],
 		rules: {
 			...config.rules,
-			'require-await': 'error',
 			'key-spacing': ['error', { beforeColon: false, afterColon: true }],
 			'object-shorthand': ['error', 'always'],
 			'prefer-template': 'error',
