@@ -88,7 +88,7 @@ function readConfig() {
 		}
 		handleError(`${configFilePath}: "${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
 	});
-	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? `(${_.join(partitions[0], ' OR ')})` : undefined;
+	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? partitions[0] : undefined;
 	acceptedNonSpdx = partitions[1].concat('Project-Owner');
 }
 
