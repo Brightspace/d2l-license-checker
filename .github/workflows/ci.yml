@@ -1,10 +1,7 @@
 name: CI
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-  workflow_dispatch:
+on: pull_request
+permissions:
+  contents: read
 jobs:
   determine-node-versions:
     name: Determine Node Versions
@@ -44,26 +41,3 @@ jobs:
         run: npm run lint
       - name: test
         run: npm run test
-  release:
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    needs: test
-    name: Release
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        uses: Brightspace/third-party-actions@actions/checkout
-        with:
-          persist-credentials: false
-      - name: Setup Node
-        uses: Brightspace/third-party-actions@actions/setup-node
-        with:
-          node-version-file: .nvmrc
-      - name: Semantic Release
-        if: github.ref == 'refs/heads/master'
-        uses: BrightspaceUI/actions/semantic-release@main
-        with:
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{secrets.D2L_RELEASE_TOKEN}}
-          NPM: true
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
