@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 
 console.warn('WARNING: license-checker-ci command is deprecated and will be removed in a future release. Use d2l-license-checker instead.\n');
-require('./d2l-license-checker')
+require('./d2l-license-checker');

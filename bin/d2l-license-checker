@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 
 // SPDX license IDs: https://spdx.org/licenses/
 
@@ -27,7 +26,7 @@ const argv = yargs(hideBin(process.argv))
 			.positional('config-file-path', {
 				describe: 'Path to configuration file from current directory.',
 				defaultDescription: `<project-path>/${defaultConfigFilePath}`
-			})
+			});
 	})
 	.help('h')
 	.alias('h', 'help')
@@ -54,20 +53,19 @@ let projectPackage;
 const failedLicenses = {};
 
 function handleError(err, code) {
-	console.error('ERROR: ' + err.replace(/\n/g, '\n       '));
-	/* eslint no-process-exit:0 */
+	console.error(`ERROR: ${err.replace(/\n/g, '\n       ')}`);
 	process.exit(code || 1);
 }
 
 function readConfig() {
 	try {
-		let data = fs.readFileSync(configFilePath, { encoding: 'utf8' });
+		const data = fs.readFileSync(configFilePath, { encoding: 'utf8' });
 		config = JSON.parse(data);
-	} catch (err) {
+	} catch {
 		console.error('No config file specified, using unmodified defaults.');
 		config = {};
 	}
-	for (let key in config) {
+	for (const key in config) {
 		if (configAcceptedEntries.indexOf(key) < 0) {
 			handleError(`${configFilePath}: "${key}" is not a valid entry (must be one of ${configAcceptedEntries}).`);
 		}
@@ -76,13 +74,13 @@ function readConfig() {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
-	const defaultConfig = require(`../config/default_config.json`);
+	const defaultConfig = require('../config/default_config.json');
 	config.acceptedLicenses = defaultConfig.acceptedLicenses;
 	config.acceptedScopes = _.union(defaultConfig.acceptedScopes, (config.acceptedScopes || []));
 	config.defaultManualOverrides = defaultConfig.manualOverrides;
 	config.manualOverrides = _.assign({}, defaultConfig.manualOverrides, (config.manualOverrides || {}));
-	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides; // eslint-disable-line eqeqeq
-	let partitions = _.partition(config.acceptedLicenses, (license) => { // eslint-disable-line consistent-return
+	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides;
+	const partitions = _.partition(config.acceptedLicenses, (license) => {
 		if (spdxIds.includes(license)) {
 			return true;
 		} else if (spdxExceptions.indexOf(license) >= 0) {
@@ -90,14 +88,14 @@ function readConfig() {
 		}
 		handleError(`${configFilePath}: "${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
 	});
-	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? '(' + _.join(partitions[0], ' OR ') + ')' : undefined;
+	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? `(${_.join(partitions[0], ' OR ')})` : undefined;
 	acceptedNonSpdx = partitions[1].concat('Project-Owner');
 }
 
 function satisfiesNoThrow(first, second) {
 	try {
 		return satisfies(first, second);
-	} catch (err) {
+	} catch {
 		// throws on invalid SPDX ID
 		return false;
 	}
@@ -113,7 +111,7 @@ function checkLicense(licenseString, packageString) {
 	} */
 	return (
 		acceptedNonSpdx.indexOf(licenseString) >= 0
-		|| packageString.startsWith(projectPackage.name + '@') // accept your own package
+		|| packageString.startsWith(`${projectPackage.name}@`) // accept your own package
 		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
 		|| licenseString.startsWith(specialExemptionPrefix)
 		|| (acceptedSpdxExpr && satisfiesNoThrow(licenseString, acceptedSpdxExpr))
@@ -170,6 +168,6 @@ const checkerConfig = {
 
 // the semantics of our arguments are different than license-checker (see their --help)
 npmChecker(checkerConfig)
-	.catch(err => handleError('license-checker did not run successfully. Details:\n' + JSON.stringify(err)))
+	.catch(err => handleError(`license-checker did not run successfully. Details:\n${JSON.stringify(err)}`))
 	.then(json => processLicenseCheckerOutput(json))
-	.catch(err => handleError('Uncaught exception. Details:\n' + JSON.stringify(err)));
+	.catch(err => handleError(`Uncaught exception. Details:\n${JSON.stringify(err)}`));

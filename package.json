@@ -9,9 +9,12 @@
   },
   "scripts": {
     "license-check": "node bin/d2l-license-checker",
-    "lint": "eslint lib/** bin/** test",
-    "test": "mocha --timeout 120000",
-    "posttest": "npm run license-check"
+    "lint": "npm run lint:eslint",
+    "lint:eslint": "eslint .",
+    "fix": "npm run fix:eslint",
+    "fix:eslint": "npm run lint:eslint -- --fix",
+    "test": "npm run lint && npm run test:unit && npm run license-check",
+    "test:unit": "mocha --timeout 120000"
   },
   "bin": {
     "d2l-license-checker": "./bin/d2l-license-checker",
@@ -26,8 +29,12 @@
     "yargs": "^18"
   },
   "devDependencies": {
+    "@eslint/compat": "^1",
     "chai": "^6",
-    "eslint": "^8",
+    "eslint": "^9",
+    "eslint-config-brightspace": "^2",
+    "eslint-plugin-json": "^4",
+    "eslint-plugin-mocha": "^11",
     "mocha": "^11",
     "pre-commit": "^1"
   },
