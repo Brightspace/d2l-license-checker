@@ -1,5 +1,3 @@
-'use strict';
-
 const assert = require('chai').assert;
 const path = require('path');
 const spawnSync = require('child_process').spawnSync;
@@ -11,13 +9,13 @@ const verbose = true; // turn this on if you want to see checker command output
 
 function checkProject(projectPath, install = true) {
 
-	let args = [path.join('bin', 'd2l-license-checker')];
+	const args = [path.join('bin', 'd2l-license-checker')];
 	if (projectPath) {
 		args.push(projectPath);
 	}
 
 	if (install) {
-		let npm = spawnSync(npmCmd, ['install'], {cwd: projectPath, shell: true});
+		const npm = spawnSync(npmCmd, ['install'], { cwd: projectPath, shell: true });
 		if (npm.error !== undefined) {
 			throw npm.error;
 		}
@@ -33,7 +31,7 @@ function checkProject(projectPath, install = true) {
 		}
 	}
 
-	let node = spawnSync('node', args);
+	const node = spawnSync('node', args);
 	if (node.error !== undefined) {
 		throw node.error;
 	}
