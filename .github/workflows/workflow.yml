@@ -6,14 +6,31 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
+  determine-node-versions:
+    name: Determine Node Versions
+    runs-on: ubuntu-latest
+    outputs:
+      node-versions: ${{steps.gnv.outputs.node-versions}}
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Generate node versions
+        id: gnv
+        run: |
+          NVMRC_VER=$(cat .nvmrc)
+          VER=${NVMRC_VER%%.*}
+          VER_BELOW=$((VER-2))
+          VER_ABOVE=$((VER+2))
+          echo "node-versions=[\"$VER_BELOW\",\"$VER\",\"$VER_ABOVE\"]" >> $GITHUB_OUTPUT
   test:
     name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    needs: determine-node-versions
     strategy:
       fail-fast: false
       matrix:
-        node: [18, 20, 22, 24]
+        node: ${{fromJson(needs.determine-node-versions.outputs.node-versions)}}
     steps:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
@@ -41,7 +58,7 @@ jobs:
       - name: Setup Node
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
-          node-version: 18 # lowest version semantic release supports
+          node-version-file: .nvmrc
       - name: Semantic Release
         if: github.ref == 'refs/heads/master'
         uses: BrightspaceUI/actions/semantic-release@main
