@@ -20,6 +20,11 @@
     "d2l-license-checker": "./bin/d2l-license-checker",
     "license-checker-ci": "./bin/license-checker-ci"
   },
+  "files": [
+    "/bin",
+    "/config",
+    "/lib"
+  ],
   "dependencies": {
     "license-checker": "^25",
     "lodash": "^4",

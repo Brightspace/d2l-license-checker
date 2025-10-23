@@ -1,7 +1,0 @@
-test/
-.editorconfig
-.eslintignore
-.eslintrc.yml
-.npmignore
-.travis.yml
-.npmrc
