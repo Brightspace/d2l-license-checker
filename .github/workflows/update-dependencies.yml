@@ -1,7 +1,7 @@
 name: Update Dependencies
 on:
   schedule:
-    - cron: '00 9 * * 1-5' # Mon-Fri 5:00am EDT/4:00am EST
+    - cron: 0 9 * * 1-5 # Mon-Fri 5:00am EDT/4:00am EST
   workflow_dispatch:
 permissions:
   contents: read

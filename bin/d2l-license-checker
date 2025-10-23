@@ -11,11 +11,13 @@ const _ = require('lodash');
 const checker = require('license-checker');
 const spdxIds = require('spdx-license-ids');
 const satisfies = require('spdx-satisfies');
+const yargs = require('yargs');
+const { hideBin } = require('yargs/helpers');
 
 const OverrideHelper = require('../lib/override-helper');
 
 const defaultConfigFilePath = '.licensechecker.json';
-const argv = require('yargs')
+const argv = yargs(hideBin(process.argv))
 	.usage('$0 [project-path] [config-file-path]', '', yargs => {
 		yargs
 			.positional('project-path', {
