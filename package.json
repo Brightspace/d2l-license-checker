@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "chai": "^6",
-    "eslint": "^8",
+    "eslint": "^9",
     "mocha": "^11",
     "pre-commit": "^1"
   },
