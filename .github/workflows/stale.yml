@@ -1,0 +1,36 @@
+name: Close Stale Issues and Pull Requests
+on:
+  schedule:
+    - cron: 0 14 * * 1 # Mon 10:00am EDT/9:00am EST
+  workflow_dispatch: # manual trigger
+permissions:
+  actions: write
+  contents: write
+  issues: write
+  pull-requests: write
+concurrency: stale
+jobs:
+  stale:
+    name: Close Stale Issues and Pull Requests
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Brightspace/third-party-actions@actions/stale
+        with:
+          stale-issue-message: >
+            This issue is stale because it has been open 90 days with no activity.
+            Remove stale label or comment or this will be closed in 14 days.
+          stale-pr-message: >
+            This pull request is stale because it has been open 90 days with no activity.
+            Remove stale label or comment or this will be closed in 14 days.
+          close-issue-message: >
+            This issue was closed because it has been stalled for 14 days with no activity.
+          close-pr-message: >
+            This pull request was closed because it has been stalled for 14 days with no activity.
+          days-before-issue-stale: 90
+          days-before-pr-stale: 90
+          days-before-issue-close: 14
+          days-before-pr-close: 14
+          stale-issue-label: stale
+          stale-pr-label: stale
+          delete-branch: true
