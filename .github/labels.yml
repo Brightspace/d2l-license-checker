@@ -1,0 +1,3 @@
+- name: stale
+  description: This issue or pull request has been inactive for too long and will be closed soon
+  color: 6b473a
