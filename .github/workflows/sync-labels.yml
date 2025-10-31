@@ -1,0 +1,25 @@
+name: Sync Labels
+on:
+  push:
+    branches: master
+    paths:
+      - .github/workflows/sync-labels.yml
+      - .github/labels.yml
+  workflow_dispatch: # manual trigger
+permissions:
+  contents: read
+  issues: write
+concurrency: sync-labels
+jobs:
+  sync-labels:
+    name: Sync Labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Sync labels
+        uses: Brightspace/third-party-actions@micnncim/action-label-syncer
+        with:
+          token: ${{github.token}}
+          prune: false
