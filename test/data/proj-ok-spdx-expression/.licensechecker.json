@@ -1,5 +1,5 @@
 {
   "manualOverrides": {
-	  "bluebird@3.4.7": "(MIT OR Apache-2.0)"
+    "bluebird@3.4.7": "(MIT OR Apache-2.0)"
   }
 }

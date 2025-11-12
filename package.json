@@ -20,7 +20,8 @@
     "fix": "npm run fix:eslint",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "license-check": "node bin/d2l-license-checker",
-    "lint": "npm run lint:eslint",
+    "lint": "npm run lint:eslint && npm run lint:editorconfig",
+    "lint:editorconfig": "editorconfig-checker",
     "lint:eslint": "eslint .",
     "test": "npm run lint && npm run test:unit && npm run license-check",
     "test:unit": "mocha --timeout 120000"
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@eslint/compat": "^1",
     "chai": "^6",
+    "editorconfig-checker": "^6",
     "eslint": "^9",
     "eslint-config-brightspace": "^2",
     "eslint-plugin-json": "^4",
