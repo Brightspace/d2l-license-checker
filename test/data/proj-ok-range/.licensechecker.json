@@ -1,5 +1,5 @@
 {
   "manualOverrides": {
-	  "weak-map@^1": "Apache-2.0"
+    "weak-map@^1": "Apache-2.0"
   }
 }
