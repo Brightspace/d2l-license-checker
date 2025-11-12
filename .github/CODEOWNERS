@@ -1,2 +1,3 @@
 * @Brightspace/quality-enablement
-/config/default_config.json @Brightspace/open-source-advisory @Brightspace/quality-enablement
+package-lock.json
+config/default_config.json @Brightspace/quality-enablement @Brightspace/open-source-advisory
