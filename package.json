@@ -38,7 +38,7 @@
     "yargs": "^18"
   },
   "devDependencies": {
-    "@eslint/compat": "^1",
+    "@eslint/compat": "^2",
     "chai": "^6",
     "editorconfig-checker": "^6",
     "eslint": "^9",
