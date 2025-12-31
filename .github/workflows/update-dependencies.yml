@@ -30,3 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}
           COMMIT_MESSAGE: Update Dependencies
           PR_TITLE: Update Dependencies
+          SLACK_CHANNEL_FAILURE: '#quality-enablement-alerts'
+          SLACK_CHANNEL_STALE_PR: '#quality-enablement-alerts'
+          SLACK_TOKEN: ${{secrets.D2L_SLACK_TOKEN}}
+
