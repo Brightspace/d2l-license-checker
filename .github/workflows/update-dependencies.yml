@@ -33,4 +33,3 @@ jobs:
           SLACK_CHANNEL_FAILURE: '#quality-enablement-alerts'
           SLACK_CHANNEL_STALE_PR: '#quality-enablement-alerts'
           SLACK_TOKEN: ${{secrets.D2L_SLACK_TOKEN}}
-
