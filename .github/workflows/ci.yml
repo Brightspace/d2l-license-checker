@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
       - name: Set up node
-        uses: Brightspace/third-party-actions@actions/setup-node
+        uses: Brightspace/setup-node@main
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
       - name: Setup Node
-        uses: Brightspace/third-party-actions@actions/setup-node
+        uses: Brightspace/setup-node@main
         with:
           node-version: ${{matrix.node}}
           cache: npm
