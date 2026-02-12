@@ -20,9 +20,7 @@ jobs:
         run: |
           NVMRC_VER=$(cat .nvmrc)
           VER=${NVMRC_VER%%.*}
-          VER_BELOW=$((VER-2))
-          VER_ABOVE=$((VER+2))
-          echo "node-versions=[\"$VER_BELOW\",\"$VER\",\"$VER_ABOVE\"]" >> $GITHUB_OUTPUT
+          echo "node-versions=[\"$((VER-2))\",\"$VER\"]" >> $GITHUB_OUTPUT
   lint:
     name: Lint
     timeout-minutes: 5
