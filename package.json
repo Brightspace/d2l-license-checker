@@ -1,6 +1,6 @@
 {
   "name": "d2l-license-checker",
-  "version": "6.0.4",
+  "version": "7.0.0",
   "description": "Simple tool to check licenses of all npm dependencies in a project",
   "repository": {
     "type": "git",
