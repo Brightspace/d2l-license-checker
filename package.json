@@ -41,7 +41,7 @@
     "@eslint/compat": "^2",
     "chai": "^6",
     "editorconfig-checker": "^6",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-config-brightspace": "^2",
     "eslint-plugin-json": "^4",
     "eslint-plugin-mocha": "^11",
