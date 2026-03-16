@@ -1,4 +1,7 @@
 name: Sync Labels
+permissions:
+  contents: read
+  issues: write
 on:
   push:
     branches: main
@@ -6,9 +9,6 @@ on:
       - .github/workflows/sync-labels.yml
       - .github/labels.yml
   workflow_dispatch: # manual trigger
-permissions:
-  contents: read
-  issues: write
 concurrency: sync-labels
 jobs:
   sync-labels:

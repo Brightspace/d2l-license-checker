@@ -1,13 +1,13 @@
 name: Close Stale Issues and Pull Requests
-on:
-  schedule:
-    - cron: 0 14 * * 1 # Mon 10:00am EDT/9:00am EST
-  workflow_dispatch: # manual trigger
 permissions:
   actions: write
   contents: write
   issues: write
   pull-requests: write
+on:
+  schedule:
+    - cron: 0 14 * * 1 # Mon 10:00am EDT/9:00am EST
+  workflow_dispatch: # manual trigger
 concurrency: stale
 jobs:
   stale:
