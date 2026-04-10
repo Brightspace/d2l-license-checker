@@ -8,7 +8,6 @@ const dataDir = path.join('test', 'data');
 const verbose = true; // turn this on if you want to see checker command output
 
 function checkProject(projectPath, install = true) {
-
 	const args = [path.join('bin', 'd2l-license-checker')];
 	if (projectPath) {
 		args.push(projectPath);
@@ -46,7 +45,9 @@ function checkProject(projectPath, install = true) {
 
 const makeTestPath = (proj) => path.join(dataDir, proj);
 
-describe('Command invocation', () => {
+describe('Command invocation', function() {
+	this.timeout(12000);
+
 	it('should accept a project with no dependencies', () => {
 		assert.equal(checkProject(makeTestPath('proj-no-deps')), 0);
 	});

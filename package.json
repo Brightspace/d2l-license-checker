@@ -24,7 +24,7 @@
     "lint:editorconfig": "editorconfig-checker",
     "lint:eslint": "eslint .",
     "test": "npm run lint && npm run test:unit && npm run license-check",
-    "test:unit": "mocha --timeout 120000"
+    "test:unit": "mocha"
   },
   "pre-commit": [
     "lint"
@@ -38,13 +38,16 @@
     "yargs": "^18"
   },
   "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "^4",
     "@eslint/compat": "^2",
     "chai": "^6",
     "editorconfig-checker": "^6",
     "eslint": "^9",
     "eslint-config-brightspace": "^2",
+    "eslint-plugin-chai-friendly": "^1",
     "eslint-plugin-json": "^4",
     "eslint-plugin-mocha": "^11",
+    "eslint-plugin-promise": "^7",
     "mocha": "^11",
     "pre-commit": "^1"
   },
