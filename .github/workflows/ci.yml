@@ -51,12 +51,12 @@ jobs:
     steps:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
-      - name: Setup Node
+      - name: Set up node
         uses: Brightspace/setup-node@main
         with:
           node-version: ${{matrix.node}}
           cache: npm
-      - name: npm install
+      - name: Install dependencies
         run: npm ci
-      - name: test
+      - name: Run tests
         run: npm run test
