@@ -41,6 +41,7 @@
     "@eslint-community/eslint-plugin-eslint-comments": "^4",
     "@eslint/compat": "^2",
     "chai": "^6",
+    "d2l-test-reporting": "^5",
     "editorconfig-checker": "^6",
     "eslint": "^9",
     "eslint-config-brightspace": "^3",
