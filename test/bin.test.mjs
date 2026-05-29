@@ -1,6 +1,6 @@
-const { expect } = require('chai');
-const { join } = require('path');
-const { spawnSync } = require('child_process');
+import { expect } from 'chai';
+import { join } from 'path';
+import { spawnSync } from 'child_process';
 
 const npmCmd = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 const dataDir = join('test', 'data');

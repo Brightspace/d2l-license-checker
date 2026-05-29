@@ -24,7 +24,7 @@ module.exports = [
 	...nodeConfig.map(config => ({
 		...config,
 		files: [
-			'**/*.js',
+			'**/*.{js,mjs}',
 			'bin/d2l-license-checker',
 			'bin/license-checker-ci'
 		],
@@ -50,7 +50,7 @@ module.exports = [
 	})),
 	{
 		...promiseConfig,
-		files: ['**/*.js'],
+		files: ['**/*.{js,mjs}'],
 		rules: {
 			...promiseConfig.rules,
 			'promise/prefer-await-to-then': ['error', { strict: true }]
@@ -58,16 +58,16 @@ module.exports = [
 	},
 	{
 		...commentsConfig,
-		files: ['**/*.js']
+		files: ['**/*.{js,mjs}']
 	},
 	jsonConfig,
 	...testingConfig.map(config => ({
 		...config,
-		files: ['test/**/*.test.js']
+		files: ['test/**/*.test.{js,mjs}']
 	})),
 	{
 		...mochaConfig,
-		files: ['test/**/*.test.js'],
+		files: ['test/**/*.test.{js,mjs}'],
 		rules: {
 			...mochaConfig.rules,
 			'mocha/consistent-spacing-between-blocks': 'off',
@@ -77,7 +77,7 @@ module.exports = [
 		}
 	},
 	{
-		files: ['test/**/*.test.js'],
+		files: ['test/**/*.test.{js,mjs}'],
 		plugins: {
 			'chai-friendly': chaiFriendlyPlugin
 		},
