@@ -23,7 +23,7 @@
   description: This doesn't seem right
   color: e4e669
 - name: javascript
-  description: Pull requests that update javascript code
+  description: Pull requests that update JavaScript code
   color: 168700
 - name: question
   description: Further information is requested
