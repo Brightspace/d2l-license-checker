@@ -35,4 +35,5 @@
   description: This will not be worked on
   color: ffffff
 - name: released
+  description: Pull requests that have been released
   color: ededed
