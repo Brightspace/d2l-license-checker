@@ -264,16 +264,6 @@ describe('license checker', () => {
 		});
 	});
 
-	describe('ci', () => {
-		it('warns deprecated', () => {
-			const path = makeTestPath('proj-ci-deprecated');
-			const result = checkProject(path, { bin: 'license-checker-ci', install: false });
-
-			expect(result.status).to.equal(0);
-			expect(result.stderr).to.contain('license-checker-ci command is deprecated');
-		});
-	});
-
 	it('self test', () => {
 		expect(checkProjectStatus('.', { install: false })).to.equal(0);
 	});
