@@ -8,8 +8,7 @@
   },
   "license": "MIT",
   "bin": {
-    "d2l-license-checker": "./bin/d2l-license-checker",
-    "license-checker-ci": "./bin/license-checker-ci"
+    "d2l-license-checker": "./bin/d2l-license-checker"
   },
   "files": [
     "/bin",

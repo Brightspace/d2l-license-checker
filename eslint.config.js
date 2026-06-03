@@ -25,8 +25,7 @@ module.exports = [
 		...config,
 		files: [
 			'**/*.{js,mjs}',
-			'bin/d2l-license-checker',
-			'bin/license-checker-ci'
+			'bin/d2l-license-checker'
 		],
 		rules: {
 			...config.rules,
