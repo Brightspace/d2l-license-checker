@@ -1,13 +1,6 @@
 {
-  "name": "proj-ok-only",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "proj-deps-dev",
+  "version": "0.0.0",
   "devDependencies": {
     "bluebird": "3.4.7"
   }

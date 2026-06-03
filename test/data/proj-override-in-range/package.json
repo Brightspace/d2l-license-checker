@@ -1,13 +1,6 @@
 {
-  "name": "proj-ok-range",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "proj-override-in-range",
+  "version": "0.0.0",
   "dependencies": {
     "weak-map": "1.0.5"
   }
