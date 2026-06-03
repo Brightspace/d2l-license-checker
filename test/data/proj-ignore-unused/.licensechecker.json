@@ -1,0 +1,6 @@
+{
+  "ignoreUnusedManualOverrides": true,
+  "manualOverrides": {
+    "fake-package@1.0.0": "MIT"
+  }
+}
