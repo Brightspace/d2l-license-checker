@@ -1,9 +1,5 @@
 {
   "reporter": "d2l-test-reporting/reporters/mocha.js",
-  "reporter-options": [
-    "reportVersionLatest=true",
-    "reportConfigurationVersionLatest=true"
-  ],
   "spec": "test/**/*.test.mjs",
   "timeout": 12000
 }
