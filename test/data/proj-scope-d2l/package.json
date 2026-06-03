@@ -1,13 +1,6 @@
 {
-  "name": "proj-ok-scope-d2l",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "proj-scope-d2l",
+  "version": "0.0.0",
   "dependencies": {
     "@d2l/private": "0.0.1"
   }

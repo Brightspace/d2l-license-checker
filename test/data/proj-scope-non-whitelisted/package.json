@@ -1,13 +1,6 @@
 {
-  "name": "proj-license-issue-scope",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "proj-scope-non-whitelisted",
+  "version": "0.0.0",
   "dependencies": {
     "modm": "0.4.1"
   }
