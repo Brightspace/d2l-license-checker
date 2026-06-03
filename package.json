@@ -50,7 +50,8 @@
     "eslint-plugin-mocha": "^11",
     "eslint-plugin-promise": "^7",
     "mocha": "^11",
-    "pre-commit": "^2"
+    "pre-commit": "^2",
+    "yn": "^5"
   },
   "engines": {
     "node": ">=22"
