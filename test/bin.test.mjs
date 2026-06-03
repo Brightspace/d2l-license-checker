@@ -1,10 +1,14 @@
+import { env } from 'process';
 import { expect } from 'chai';
 import { join } from 'path';
 import { spawnSync } from 'child_process';
+import yn from 'yn';
 
 const npmCmd = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 const dataDir = join('test', 'data');
-const verbose = true; // turn this on if you want to see checker command output
+// set this to truthy value if you want to see checker command output
+const { TEST_LOGGING_VERBOSE } = env;
+const verbose = yn(TEST_LOGGING_VERBOSE, false);
 
 const checkProject = (projectPath, install = true) => {
 	const args = [join('bin', 'd2l-license-checker')];

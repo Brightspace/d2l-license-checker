@@ -44,7 +44,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     needs: determine-node-versions
     strategy:
       fail-fast: false
@@ -65,6 +65,8 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm test
+        env:
+          TEST_LOGGING_VERBOSE: true
       - name: Report test results
         if: (!cancelled()) && github.actor != 'dependabot[bot]'
         uses: Brightspace/test-reporting-action@main
