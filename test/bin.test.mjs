@@ -64,20 +64,20 @@ const makeTestPath = (proj) => join(dataDir, proj);
 
 describe('license checker', () => {
 	describe('config', () => {
-		it('allows no config file', () => {
-			const path = makeTestPath('proj-no-cfg');
+		it('allows none', () => {
+			const path = makeTestPath('proj-config-none');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
-		it('rejects bad config', () => {
-			const path = makeTestPath('proj-bad-cfg');
+		it('rejects bad', () => {
+			const path = makeTestPath('proj-config-bad');
 
 			expect(checkProjectStatus(path)).to.equal(1);
 		});
 
 		it('rejects non-object overrides', () => {
-			const path = makeTestPath('proj-bad-override-type');
+			const path = makeTestPath('proj-config-overrides-non-object');
 
 			expect(checkProjectStatus(path, { install: false })).to.equal(1);
 		});
@@ -85,51 +85,51 @@ describe('license checker', () => {
 
 	describe('dependencies', () => {
 		it('accepts none', () => {
-			const path = makeTestPath('proj-no-deps');
+			const path = makeTestPath('proj-deps-none');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('ignores dev', () => {
-			const path = makeTestPath('proj-ok-dev');
+			const path = makeTestPath('proj-deps-dev');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('ignores prod', () => {
-			const path = makeTestPath('proj-ok-prod');
+			const path = makeTestPath('proj-deps-prod');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 	});
 
 	describe('licenses', () => {
-		it('rejects (dev)', () => {
-			const path = makeTestPath('proj-license-issue-dev');
+		it('rejects dev', () => {
+			const path = makeTestPath('proj-license-dev');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 
-		it('rejects (prod)', () => {
-			const path = makeTestPath('proj-license-issue');
+		it('rejects prod', () => {
+			const path = makeTestPath('proj-license-prod');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 
 		it('accepts project-owner', () => {
-			const path = makeTestPath('proj-ok-project-owner');
+			const path = makeTestPath('proj-license-project-owner');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('accepts public-domain', () => {
-			const path = makeTestPath('proj-ok-public-domain');
+			const path = makeTestPath('proj-license-public-domain');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('accepts own package', () => {
-			const path = makeTestPath('proj-ok-self');
+			const path = makeTestPath('proj-license-own-package');
 
 			expect(checkProjectStatus(path, { install: false })).to.equal(0);
 		});
@@ -137,19 +137,19 @@ describe('license checker', () => {
 
 	describe('scopes', () => {
 		it('accepts d2l', () => {
-			const path = makeTestPath('proj-ok-scope-d2l');
+			const path = makeTestPath('proj-scope-d2l');
 
 			expect(checkProjectStatus(path, { install: false })).to.equal(0);
 		});
 
 		it('accepts custom', () => {
-			const path = makeTestPath('proj-ok-scope-custom');
+			const path = makeTestPath('proj-scope-custom');
 
 			expect(checkProjectStatus(path, { install: false })).to.equal(0);
 		});
 
 		it('rejects non-whitelisted', () => {
-			const path = makeTestPath('proj-license-issue-scope');
+			const path = makeTestPath('proj-scope-non-whitelisted');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
@@ -157,25 +157,25 @@ describe('license checker', () => {
 
 	describe('overrides', () => {
 		it('accepts in-range', () => {
-			const path = makeTestPath('proj-ok-range');
+			const path = makeTestPath('proj-override-in-range');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('rejects out-of-range', () => {
-			const path = makeTestPath('proj-bad-override-range');
+			const path = makeTestPath('proj-override-out-of-range');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 
 		it('allows special exemption', () => {
-			const path = makeTestPath('proj-ok-override-special');
+			const path = makeTestPath('proj-override-special-exemption');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('warns unused', () => {
-			const path = makeTestPath('proj-unused-override');
+			const path = makeTestPath('proj-override-warns-unused');
 			const result = checkProject(path, { install: false });
 
 			expect(result.status).to.equal(0);
@@ -183,7 +183,7 @@ describe('license checker', () => {
 		});
 
 		it('ignores unused', () => {
-			const path = makeTestPath('proj-ignore-unused');
+			const path = makeTestPath('proj-override-ignores-unused');
 			const result = checkProject(path, { install: false });
 
 			expect(result.status).to.equal(0);
@@ -191,25 +191,25 @@ describe('license checker', () => {
 		});
 
 		it('rejects malformed key', () => {
-			const path = makeTestPath('proj-bad-override-key');
+			const path = makeTestPath('proj-override-malformed-key');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 
 		it('rejects malformed version', () => {
-			const path = makeTestPath('proj-bad-override-version');
+			const path = makeTestPath('proj-override-malformed-version');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 
-		it('rejects override conflict', () => {
+		it('rejects conflict', () => {
 			const path = makeTestPath('proj-override-conflict');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 
 		it('accepts wildcard', () => {
-			const path = makeTestPath('proj-ok-override-wildcard');
+			const path = makeTestPath('proj-override-wildcard');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
@@ -217,27 +217,27 @@ describe('license checker', () => {
 
 	describe('SPDX expressions', () => {
 		it('allows valid', () => {
-			const path = makeTestPath('proj-ok-spdx-expression');
+			const path = makeTestPath('proj-spdx-valid');
 
 			expect(checkProjectStatus(path)).to.equal(0);
 		});
 
 		it('rejects invalid', () => {
-			const path = makeTestPath('proj-bad-spdx-expression');
+			const path = makeTestPath('proj-spdx-invalid');
 
 			expect(checkProjectStatus(path)).to.equal(2);
 		});
 	});
 
 	describe('flags', () => {
-		it('accepts prod-only', () => {
-			const path = makeTestPath('proj-prod-only');
+		it('accepts prod', () => {
+			const path = makeTestPath('proj-flag-prod');
 
 			expect(checkProjectStatus(path, { args: ['-p'] })).to.equal(0);
 		});
 
-		it('accepts dev-only', () => {
-			const path = makeTestPath('proj-dev-only');
+		it('accepts dev', () => {
+			const path = makeTestPath('proj-flag-dev');
 
 			expect(checkProjectStatus(path, { args: ['-d'] })).to.equal(0);
 		});
@@ -249,13 +249,13 @@ describe('license checker', () => {
 		});
 
 		it('rejects unknown', () => {
-			const path = makeTestPath('proj-unknown-flag');
+			const path = makeTestPath('proj-flag-unknown');
 
 			expect(checkProjectStatus(path, { args: ['--bogus'], install: false })).to.equal(1);
 		});
 
 		it('outputs template', () => {
-			const path = makeTestPath('proj-template');
+			const path = makeTestPath('proj-flag-template');
 			const result = checkProject(path, { args: ['-t'] });
 
 			expect(result.status).to.equal(2);
@@ -266,7 +266,7 @@ describe('license checker', () => {
 
 	describe('ci', () => {
 		it('warns deprecated', () => {
-			const path = makeTestPath('proj-ci');
+			const path = makeTestPath('proj-ci-deprecated');
 			const result = checkProject(path, { bin: 'license-checker-ci', install: false });
 
 			expect(result.status).to.equal(0);
