@@ -1,0 +1,6 @@
+{
+  "manualOverrides": {
+    "modm@0.4.1": "GPL-3.0",
+    "modm@=0.4.1": "Apache-2.0"
+  }
+}
