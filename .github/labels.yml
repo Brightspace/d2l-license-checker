@@ -13,6 +13,9 @@
 - name: enhancement
   description: New feature or request
   color: a2eeef
+- name: github-actions
+  description: Pull requests that update GitHub Actions code
+  color: 000000
 - name: good first issue
   description: Good for newcomers
   color: 7057ff
@@ -31,9 +34,9 @@
 - name: stale
   description: This issue or pull request has been inactive for too long and will be closed soon
   color: 6b473a
-- name: wontfix
-  description: This will not be worked on
-  color: ffffff
 - name: released
   description: Pull requests that have been released
   color: ededed
+- name: wontfix
+  description: This will not be worked on
+  color: ffffff
