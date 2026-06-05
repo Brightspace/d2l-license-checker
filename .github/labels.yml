@@ -31,12 +31,12 @@
 - name: question
   description: Further information is requested
   color: d876e3
-- name: stale
-  description: This issue or pull request has been inactive for too long and will be closed soon
-  color: 6b473a
 - name: released
   description: Pull requests that have been released
   color: ededed
+- name: stale
+  description: This issue or pull request has been inactive for too long and will be closed soon
+  color: 6b473a
 - name: wontfix
   description: This will not be worked on
   color: ffffff
