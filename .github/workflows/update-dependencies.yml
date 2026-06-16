@@ -28,8 +28,8 @@ jobs:
           AUTO_MERGE_METHOD: squash
           AUTO_MERGE_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}
           GITHUB_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}
-          COMMIT_MESSAGE: Update Dependencies
-          PR_TITLE: Update Dependencies
+          COMMIT_MESSAGE: 'fix: update dependencies'
+          PR_TITLE: 'fix: update dependencies'
           SLACK_CHANNEL_FAILURE: '#quality-enablement-alerts'
           SLACK_CHANNEL_STALE_PR: '#quality-enablement-alerts'
           SLACK_TOKEN: ${{secrets.D2L_SLACK_TOKEN}}
