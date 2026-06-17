@@ -6,7 +6,6 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 
-const _ = require('lodash');
 const checker = require('license-checker');
 const spdxIds = require('spdx-license-ids');
 const satisfies = require('spdx-satisfies');
@@ -76,18 +75,21 @@ function readConfig() {
 	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
 	const defaultConfig = require('../config/default_config.json');
 	config.acceptedLicenses = defaultConfig.acceptedLicenses;
-	config.acceptedScopes = _.union(defaultConfig.acceptedScopes, (config.acceptedScopes || []));
+	config.acceptedScopes = [...new Set([...defaultConfig.acceptedScopes, ...(config.acceptedScopes || [])])];
 	config.defaultManualOverrides = defaultConfig.manualOverrides;
-	config.manualOverrides = _.assign({}, defaultConfig.manualOverrides, (config.manualOverrides || {}));
+	config.manualOverrides = { ...defaultConfig.manualOverrides, ...(config.manualOverrides || {}) };
 	config.ignoreUnusedManualOverrides = config.ignoreUnusedManualOverrides != null ? config.ignoreUnusedManualOverrides : defaultConfig.ignoreUnusedManualOverrides;
-	const partitions = _.partition(config.acceptedLicenses, (license) => {
+	const partitions = config.acceptedLicenses.reduce((acc, license) => {
 		if (spdxIds.includes(license)) {
-			return true;
+			acc[0].push(license);
 		} else if (spdxExceptions.indexOf(license) >= 0) {
-			return false;
+			acc[1].push(license);
+		} else {
+			handleError(`${configFilePath}: "${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
 		}
-		handleError(`${configFilePath}: "${license}" is not a valid SPDX license ID or one of (${spdxExceptions}).`);
-	});
+
+		return acc;
+	}, [[], []]);
 	acceptedSpdxExpr = config.acceptedLicenses.length > 0 ? partitions[0] : undefined;
 	acceptedNonSpdx = partitions[1].concat('Project-Owner');
 }
@@ -112,7 +114,7 @@ function checkLicense(licenseString, packageString) {
 	return (
 		acceptedNonSpdx.indexOf(licenseString) >= 0
 		|| packageString.startsWith(`${projectPackage.name}@`) // accept your own package
-		|| _.some(config.acceptedScopes, (scope) => packageString.startsWith(`@${scope}/`))
+		|| config.acceptedScopes.some((scope) => packageString.startsWith(`@${scope}/`))
 		|| licenseString.startsWith(specialExemptionPrefix)
 		|| (acceptedSpdxExpr && satisfiesNoThrow(licenseString, acceptedSpdxExpr))
 	);
@@ -121,7 +123,7 @@ function checkLicense(licenseString, packageString) {
 function processLicenseCheckerOutput(json) {
 	let fail = false;
 	const overrideHelper = new OverrideHelper(config.manualOverrides, config.defaultManualOverrides);
-	_.forEach(json, (value, key) => {
+	for (const [key, value] of Object.entries(json)) {
 		// When the licenses are provided as an array, always use the first string
 		const license = overrideHelper.find(key) ||
 			(Array.isArray(value.licenses) ? value.licenses[0] : value.licenses);
@@ -135,7 +137,7 @@ function processLicenseCheckerOutput(json) {
 				`    Path: ${value.path || 'UNKNOWN'}\n`
 			);
 		}
-	});
+	}
 	if (!config.ignoreUnusedManualOverrides) {
 		overrideHelper.unvisited.forEach((override) => {
 			console.error(`WARNING: Manual override "${override}" is never used, consider removing it.\n`);
