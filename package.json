@@ -30,7 +30,6 @@
   ],
   "dependencies": {
     "license-checker": "^25",
-    "lodash": "^4",
     "semver": "^7",
     "spdx-license-ids": "^3",
     "spdx-satisfies": "^6",
