@@ -6,7 +6,8 @@
     "type": "git",
     "url": "https://github.com/Brightspace/d2l-license-checker"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
+  "author": "D2L Corporation",
   "bin": {
     "d2l-license-checker": "./bin/d2l-license-checker"
   },
