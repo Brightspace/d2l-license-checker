@@ -1,19 +1,19 @@
-const { nodeConfig, testingConfig } = require('eslint-config-brightspace');
-const { includeIgnoreFile } = require('@eslint/compat');
-const jsonPlugin = require('eslint-plugin-json');
-const promisePlugin = require('eslint-plugin-promise');
-const commentsConfigs = require('@eslint-community/eslint-plugin-eslint-comments/configs');
-const mochaPlugin = require('eslint-plugin-mocha').default;
-const chaiFriendlyPlugin = require('eslint-plugin-chai-friendly');
-const { resolve } = require('node:path');
+import { nodeConfig, testingConfig } from 'eslint-config-brightspace';
+import { includeIgnoreFile } from '@eslint/compat';
+import jsonPlugin from 'eslint-plugin-json';
+import promisePlugin from 'eslint-plugin-promise';
+import commentsConfigs from '@eslint-community/eslint-plugin-eslint-comments/configs';
+import mochaPlugin from 'eslint-plugin-mocha';
+import chaiFriendlyPlugin from 'eslint-plugin-chai-friendly';
+import { resolve } from 'node:path';
 
-const gitignorePath = resolve(__dirname, '.gitignore');
+const gitignorePath = resolve(import.meta.dirname, '.gitignore');
 const mochaConfig = mochaPlugin.configs.recommended;
 const jsonConfig = jsonPlugin.configs['recommended'];
 const promiseConfig = promisePlugin.configs['flat/recommended'];
 const commentsConfig = commentsConfigs.recommended;
 
-module.exports = [
+export default [
 	includeIgnoreFile(gitignorePath),
 	{
 		linterOptions: {
