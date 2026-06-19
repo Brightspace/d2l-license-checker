@@ -10,8 +10,8 @@ const dataDir = join('test', 'data');
 const { TEST_LOGGING_VERBOSE } = env;
 const verbose = yn(TEST_LOGGING_VERBOSE, false);
 
-const checkProject = (projectPath, { install = true, args = [], bin = 'd2l-license-checker' } = {}) => {
-	const checkerArgs = [join('bin', bin)];
+const checkProject = (projectPath, { install = true, args = [] } = {}) => {
+	const checkerArgs = [join('bin', 'd2l-license-checker')];
 
 	if (projectPath) {
 		checkerArgs.push(projectPath);
