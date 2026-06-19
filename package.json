@@ -2,6 +2,7 @@
   "name": "d2l-license-checker",
   "version": "8.0.5",
   "description": "Simple tool to check licenses of all npm dependencies in a project",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/Brightspace/d2l-license-checker"
@@ -14,7 +15,7 @@
   "files": [
     "/bin",
     "/config",
-    "/lib"
+    "/src"
   ],
   "scripts": {
     "fix": "npm run fix:eslint",

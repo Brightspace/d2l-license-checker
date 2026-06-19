@@ -1,5 +1,5 @@
 {
   "reporter": "d2l-test-reporting/reporters/mocha.js",
-  "spec": "test/**/*.test.mjs",
+  "spec": "test/**/*.test.js",
   "timeout": 12000
 }
