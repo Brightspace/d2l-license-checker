@@ -1,4 +1,4 @@
-const semver = require('semver');
+import semver from 'semver';
 
 class OverrideHelper {
 	constructor(manualOverrides, defaultManualOverrides) {
@@ -75,4 +75,4 @@ class OverrideHelper {
 	}
 }
 
-module.exports = OverrideHelper;
+export default OverrideHelper;

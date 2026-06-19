@@ -10,5 +10,4 @@ javascript:
   - changed-files:
     - any-glob-to-any-file:
       - '**/*.js'
-      - '**/*.mjs'
       - bin/d2l-license-checker

@@ -24,7 +24,7 @@ export default [
 	...nodeConfig.map(config => ({
 		...config,
 		files: [
-			'**/*.{js,mjs}',
+			'**/*.js',
 			'bin/d2l-license-checker'
 		],
 		rules: {
@@ -49,7 +49,7 @@ export default [
 	})),
 	{
 		...promiseConfig,
-		files: ['**/*.{js,mjs}'],
+		files: ['**/*.js'],
 		rules: {
 			...promiseConfig.rules,
 			'promise/prefer-await-to-then': ['error', { strict: true }]
@@ -57,16 +57,16 @@ export default [
 	},
 	{
 		...commentsConfig,
-		files: ['**/*.{js,mjs}']
+		files: ['**/*.js']
 	},
 	jsonConfig,
 	...testingConfig.map(config => ({
 		...config,
-		files: ['test/**/*.test.{js,mjs}']
+		files: ['test/**/*.test.js']
 	})),
 	{
 		...mochaConfig,
-		files: ['test/**/*.test.{js,mjs}'],
+		files: ['test/**/*.test.js'],
 		rules: {
 			...mochaConfig.rules,
 			'mocha/consistent-spacing-between-blocks': 'off',
@@ -76,7 +76,7 @@ export default [
 		}
 	},
 	{
-		files: ['test/**/*.test.{js,mjs}'],
+		files: ['test/**/*.test.js'],
 		plugins: {
 			'chai-friendly': chaiFriendlyPlugin
 		},

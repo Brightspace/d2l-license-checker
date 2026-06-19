@@ -2,17 +2,18 @@
 
 // SPDX license IDs: https://spdx.org/licenses/
 
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
+import fs from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
 
-const checker = require('license-checker');
-const spdxIds = require('spdx-license-ids');
-const satisfies = require('spdx-satisfies');
-const yargs = require('yargs');
-const { hideBin } = require('yargs/helpers');
+import checker from 'license-checker';
+import spdxIds from 'spdx-license-ids' with { type: 'json' };
+import satisfies from 'spdx-satisfies';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-const OverrideHelper = require('../lib/override-helper');
+import defaultConfig from '../config/default_config.json' with { type: 'json' };
+import OverrideHelper from '../src/override-helper.js';
 
 const defaultConfigFilePath = '.licensechecker.json';
 const argv = yargs(hideBin(process.argv))
@@ -73,7 +74,6 @@ function readConfig() {
 		handleError(`${configFilePath}: "manualOverrides" must be an object (${config.manualOverrides}).`);
 	}
 	projectPackage = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json')));
-	const defaultConfig = require('../config/default_config.json');
 	config.acceptedLicenses = defaultConfig.acceptedLicenses;
 	config.acceptedScopes = [...new Set([...defaultConfig.acceptedScopes, ...(config.acceptedScopes || [])])];
 	config.defaultManualOverrides = defaultConfig.manualOverrides;
