@@ -44,7 +44,7 @@
     "d2l-test-reporting": "^6",
     "editorconfig-checker": "^6",
     "eslint": "^9",
-    "eslint-config-brightspace": "^3",
+    "eslint-config-brightspace": "^4",
     "eslint-plugin-chai-friendly": "^1",
     "eslint-plugin-json": "^4",
     "eslint-plugin-mocha": "^11",
