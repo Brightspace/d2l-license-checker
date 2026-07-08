@@ -17,6 +17,9 @@
     "/config",
     "/src"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "fix": "npm run fix:eslint",
     "fix:eslint": "npm run lint:eslint -- --fix",
