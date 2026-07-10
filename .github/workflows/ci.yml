@@ -38,10 +38,11 @@ jobs:
           d2l-registry-token: ${{ secrets.D2L_PACKAGE_REGISTRY_AUTH_TOKEN }}
       - name: Install dependencies
         run: npm ci
-      - name: Lint (ESLint)
-        run: npm run lint:eslint
-      - name: Lint (EditorConfig)
-        run: npm run lint:editorconfig
+      - parallel:
+        - name: Lint (ESLint)
+          run: npm run lint:eslint
+        - name: Lint (EditorConfig)
+          run: npm run lint:editorconfig
   test:
     name: Test
     runs-on: ubuntu-latest
