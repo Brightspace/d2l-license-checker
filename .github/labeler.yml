@@ -2,6 +2,10 @@ documentation:
   - changed-files:
     - any-glob-to-any-file:
       - '**/*.md'
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - package-lock.json
 github-actions:
   - changed-files:
     - any-glob-to-any-file:
