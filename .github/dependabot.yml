@@ -5,6 +5,7 @@ updates:
     directory: /
     labels:
       - dependencies
+      - npm
     schedule:
       interval: weekly
       time: '08:00'
