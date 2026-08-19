@@ -15,3 +15,9 @@ javascript:
     - any-glob-to-any-file:
       - '**/*.js'
       - bin/d2l-license-checker
+npm:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .npmrc
+      - package-lock.json
+      - '**/package.json'

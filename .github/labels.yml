@@ -27,7 +27,10 @@
   color: e4e669
 - name: javascript
   description: Pull requests that update JavaScript code
-  color: 168700
+  color: f1e05a
+- name: npm
+  description: Pull requests that update npm packages or configuration
+  color: cb3837
 - name: question
   description: Further information is requested
   color: d876e3
