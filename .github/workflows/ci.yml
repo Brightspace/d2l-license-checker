@@ -43,6 +43,23 @@ jobs:
           run: npm run lint:eslint
         - name: Lint (EditorConfig)
           run: npm run lint:editorconfig
+  licenses:
+    name: Check Licenses
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Set up node
+        uses: Brightspace/setup-node@main
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          d2l-registry-token: ${{ secrets.D2L_PACKAGE_REGISTRY_AUTH_TOKEN }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Check licenses
+        run: npm run license-check
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -67,7 +84,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run tests
-        run: npm test
+        run: npm run test:unit
         env:
           TEST_LOGGING_VERBOSE: true
       - name: Report test results
