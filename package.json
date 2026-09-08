@@ -52,7 +52,7 @@
     "eslint-plugin-json": "^5",
     "eslint-plugin-mocha": "^11",
     "eslint-plugin-promise": "^7",
-    "mocha": "^11",
+    "mocha": "^12",
     "pre-commit": "^2",
     "yn": "^5"
   },
