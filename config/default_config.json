@@ -117,7 +117,6 @@
     "source-map@<1": "BSD-3-Clause",
     "speedometer@<1": "MIT",
     "stack-trace@<1": "MIT",
-    "superagent-d2l-cors-proxy@<1": "Apache-2.0",
     "superagent@<2": "MIT",
     "traverse@<1": "MIT",
     "uglify-js@<3": "BSD-2-Clause",
